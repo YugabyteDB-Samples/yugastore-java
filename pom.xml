@@ -15,6 +15,7 @@
 		<module>checkout-microservice</module>
 		<module>react-ui</module>
 		<module>products-microservice</module>
+		<module>eureka-server-local</module>
 	</modules>
 
 	<build>

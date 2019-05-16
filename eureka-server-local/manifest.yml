@@ -1,0 +1,6 @@
+---
+applications:
+- name: eureka-server
+  random-route: false
+  host: eureka-server
+  path: target/eureka-server-local-0.0.1-SNAPSHOT.jar
