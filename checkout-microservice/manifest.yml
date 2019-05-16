@@ -1,0 +1,7 @@
+---
+applications:
+- name: cronos-checkout-api
+  random-route: false
+  path: target/cronos-checkout-api-0.0.1-SNAPSHOT.jar
+  services:
+  - kronos-eureka-server

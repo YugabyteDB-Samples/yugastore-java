@@ -1,0 +1,31 @@
+.btn, .btn:hover, .btn:active, .btn:focus {
+    box-shadow: none;
+    padding: 0 25px !important;
+    text-transform: none;
+    font-weight: 300 !important;
+}
+.btn-small {
+    height: 36px !important;
+    line-height: 36px !important;
+    min-width: 100px;
+    border-radius: 13px !important;
+}
+.btn-meduim {
+    height: 42px !important;
+    line-height: 42px !important;
+    min-width: 120px;
+    border-radius: 21px !important;
+}
+.btn-large {
+    height: 52px !important;
+    line-height: 46px !important;
+    min-width: 160px;
+    padding: 0 30px !important;
+    border-radius: 26px !important;
+    font-size: 18px !important;
+}
+.btn .icon {
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 7px;
+}

@@ -1,0 +1,5 @@
+---
+applications:
+- name: kronos-react-ui
+  random-route: false
+  path: target/cronos-react-ui-0.0.1-SNAPSHOT.jar

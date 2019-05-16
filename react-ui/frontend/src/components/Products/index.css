@@ -1,0 +1,149 @@
+.products {
+}
+.content > .products > .products-title {
+  padding-top: 30px;
+}
+
+.product-img {
+  width: 100%;
+  background-size: cover; 
+  height: 280px;
+  min-height: 280px;
+}
+
+.product-details {
+  padding: 10px 20px 0;
+  overflow: hidden;
+  color: #5F6D74;
+}
+
+.products-title {
+  font-size: 18px;
+  font-weight: 400;
+  color: #5F6D74;
+}
+
+.item {
+  height: 462px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  transition: transform 300ms bounce;
+  box-shadow: 4px 4px 20px rgba(0,0,0,0.1);
+  border-radius: 7px;
+  margin-bottom: 50px;
+}
+
+.item .price-add {
+  border: none;
+  background: none;
+  float: right;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.items-title {
+  text-align: center;
+}
+
+img {
+  height: 20em;
+}
+
+.reviews-add .stars {
+  transform: translateX(-3px);
+}
+.reviews-add {
+  color: #5F6D7499;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.product-name {
+  font-size: 18px;
+  margin-top: 10px;
+  height: 68px;
+  max-height: 68px;
+  letter-spacing: -0.02em;
+  line-height: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; 
+  -webkit-line-clamp: 3;
+}
+
+.product-description {
+  font-size: 15px;
+  color: #5F6D74;
+  font-weight: 300;
+  line-height: 24px;
+  margin: 0;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: 300;
+  color: #5F6D74;
+}
+
+.price-add {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+i {
+  color: lightgrey;
+  transition: 0.5s;
+}
+
+i:hover {
+  color: grey;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.price-add i {
+  transform: translate(10px, -5px);
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  color: #2BB2AC;
+  display: block;
+  font-size: 26px;
+  line-height: 40px;
+  text-align: center;
+  transition: 0.5s;
+  padding-left: 2px;
+}
+.price-add i:hover {
+  background-color: #2BB2AC;
+  color: #ffffff;
+  display: block;
+  font-size: 26px;
+  transition: 0.5s;
+}
+
+.pagination {
+  display: flex !important;
+  justify-content: center;
+  transform: translateY(-27px);
+}
+.pagination button {
+  width: 170px !important;
+  padding: 0 !important;
+}
+.pagination button:last-child {
+  margin-left: 20px;
+}

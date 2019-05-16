@@ -1,0 +1,143 @@
+.cart {
+  border-top: 4px solid black;
+  display: flex;
+}
+
+#cart-title {
+  text-align: center;
+  font-size: 30px;
+}
+
+.total-in-cart {
+  opacity: 0.3;
+}
+
+.cart-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 70vw;
+  min-height: 30em;
+}
+
+#total-price {
+}
+
+.total-price {
+  width: 30vw;
+  background-color: #FFF;
+  border-left: 4px solid black;
+  border-bottom: 4px solid black;
+  padding: 3em;
+}
+
+.items-title {
+  text-align: center;
+}
+
+img {
+  height: 20em;
+}
+.cart-container {
+  padding-top: 95px;
+  padding-bottom: 35px;
+  min-height: 20vw;
+  background-color: #f7f7f7;
+}
+.cart-container h5 {
+  margin-top: 30px;
+}
+
+
+.cart-item {
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  margin: .5em 0;
+  padding: 1em 0;
+}
+
+.cart-item, .total {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.cart-item .product-image {
+  width: 130px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.cart-item .actions, .total .actions {
+  width: 130px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.cart-item .pricing h6, .total .pricing h6 {
+  color: #5F6D74;
+  font-family: Roboto, sans !important;
+  font-weight: 300;
+  display: inline-block;
+  margin-right: 20px;
+  width: 80px;
+  text-align: right;
+}
+.total .pricing h6 {
+  margin: 0;
+  display: block;
+  line-height: 32px;
+}
+.total .pricing {
+  line-height: 32px;
+}
+.cart-item .pricing, .total .pricing {
+  width: 160px;
+  padding-right: 30px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  color: #5F6D7490;
+}
+
+.cart-item .details, .total .details {
+  width: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.cart-item .details a {
+  font-size: 16.5px;
+  font-weight: 300;
+  color: #5F6D74;
+  letter-spacing: -0.02em;
+}
+
+.cart-item img {
+  height: 100px;
+  border-radius: 7px;
+  box-shadow: 0px 2px 4px rgba(132, 142, 151, 0.1);
+}
+
+.total {
+  border-top: 1px solid #5F6D7440;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+.btn-cart-remove {
+  background: #5F6D7420;
+  color: #5F6D74;
+}
+
+.btn-cart-remove:hover {
+  color: #ffffff !important;
+}
+
+.order-details {
+  font-weight: 300;
+  margin-top: 20px;
+  font-size: 16.5;
+  opacity: 0.7;
+}

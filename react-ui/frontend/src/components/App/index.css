@@ -1,0 +1,10 @@
+.content-white {
+  background-color: #FFFFFF;
+  padding-top: 25px;
+}
+
+.content-white .items {
+  justify-content: left;
+  align-items: left;
+
+}

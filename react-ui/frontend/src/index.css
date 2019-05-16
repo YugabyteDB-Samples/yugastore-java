@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, sans-serif !important;
+  font-size: 15px !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Baskerville, "Libre Baskerville", sans-serif !important;
+}
+
+h5 {
+  font-size: 36px !important;
+}
+h6 {
+  font-size: 22px !important;
+}
+
+a {
+  text-decoration: none !important;
+}
