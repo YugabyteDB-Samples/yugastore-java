@@ -31,13 +31,14 @@ Now create the necessary tables as shown below. Note that these steps would take
 $ cd resources
 $ cqlsh -f schema.cql
 ```
-
 Next, load some sample data.
 
 ```
 $ cd resources
 $ ./dataload.sh
 ```
+
+Create the postgres tables in `resources/schema.sql` for the YSQL tables.
 
 ## Step 2: Start the Eureka service discovery (local)
 
