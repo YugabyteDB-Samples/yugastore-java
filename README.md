@@ -39,9 +39,20 @@ $ cd resources
 $ ./dataload.sh
 ```
 
+## Step 2: Start the Eureka service discovery (local)
+
+You can do this as follows:
+
+```
+$ cd eureka-server-local/
+$ mvn spring-boot:run
+```
+
+Verify this is running by browsing to the [Spring Eureka Service Discovery dashboard](http://localhost:8761/).
+
 ## Step 2: Start the products microservice
 
-To run the products microservice, do the following:
+To run the products microservice, do the following in a separate shell:
 
 ```
 $ cd products-microservice/
@@ -50,12 +61,22 @@ $ mvn spring-boot:run
 
 ## Step 3: Start the checkout microservice
 
+To run the products microservice, do the following in a separate shell:
+
+```
+$ cd checkout-microservice/
+$ mvn spring-boot:run
+```
+
+
 ## Step 4: Start the UI
 
-To do this, simply run `npm start` from the `frontend` directory:
+To do this, simply run `npm start` from the `frontend` directory in a separate shell:
 
 ```
-$ cd react-ui/frontend
-$ npm start
+$ cd react-ui
+$ mvn spring-boot:run
 ```
+
+Now browse to the marketplace app at [http://localhost:8082/](http://localhost:8082/).
 
