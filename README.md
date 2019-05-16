@@ -41,6 +41,13 @@ $ ./dataload.sh
 
 ## Step 2: Start the products microservice
 
+To run the products microservice, do the following:
+
+```
+$ cd products-microservice/
+$ mvn spring-boot:run
+```
+
 ## Step 3: Start the checkout microservice
 
 ## Step 4: Start the UI
