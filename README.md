@@ -25,8 +25,11 @@ Make sure you have built the app as described above. Now do the following steps.
 
 You can [install YugaByte DB by following these instructions](https://docs.yugabyte.com/latest/quick-start/).
 
-Next, create the necessary tables.
+Next, create the necessary tables as shown below. Note that these steps would take a few seconds.
 
+```
+$ cqlsh -f resources/schema.cql
+```
 
 ## Step 2: Start the products microservice
 
