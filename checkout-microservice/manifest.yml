@@ -1,7 +1,7 @@
 ---
 applications:
-- name: cronos-checkout-api
+- name: checkout-microservice
   random-route: false
-  path: target/cronos-checkout-api-0.0.1-SNAPSHOT.jar
+  path: target/checkout-microservice-0.0.1-SNAPSHOT.jar
   services:
-  - kronos-eureka-server
+  - eureka-server

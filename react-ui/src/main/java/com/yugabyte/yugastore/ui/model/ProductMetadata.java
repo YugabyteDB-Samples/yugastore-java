@@ -1,4 +1,4 @@
-package io.pivotal.cronos.ui.model;
+package com.yugabyte.yugastore.ui.model;
 
 import java.util.List;
 import java.util.Map;

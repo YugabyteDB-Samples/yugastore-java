@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yugabyte.app.yugastore.cronoscheckoutapi.service.OrderCheckoutService;
 
 @RestController
-@RequestMapping(value = "/cronos-checkout-api")
+@RequestMapping(value = "/checkout-microservice")
 public class ShoppingCartController {
 	
 	@Autowired

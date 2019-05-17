@@ -1,4 +1,4 @@
-package io.pivotal.cronos.ui.rest;
+package com.yugabyte.yugastore.ui.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package io.pivotal.cronos.test;
+package com.yugabyte.yugastore.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

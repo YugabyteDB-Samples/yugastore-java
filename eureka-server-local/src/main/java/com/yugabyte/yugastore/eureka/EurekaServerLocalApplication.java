@@ -1,4 +1,4 @@
-package io.pivotal.cronos.eureka;
+package com.yugabyte.yugastore.eureka;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

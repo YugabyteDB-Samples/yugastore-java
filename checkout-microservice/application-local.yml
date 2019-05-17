@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cronos-checkout-api
+    name: checkout-microservice
 server:
   port: 8080
 eureka:

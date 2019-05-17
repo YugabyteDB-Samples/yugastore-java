@@ -1,4 +1,4 @@
-package io.pivotal.cronos.ui.controller;
+package com.yugabyte.yugastore.ui.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.pivotal.cronos.ui.rest.DashboardRestConsumer;
+import com.yugabyte.yugastore.ui.rest.DashboardRestConsumer;
 
 @RestController
 public class CronosProductsController {

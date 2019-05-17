@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>yugastore</name>
-	<description>YugaStore - a Retail App Marketplace with Spring and Yugabyte DB</description>
+	<description>YugaStore - a microservices based retail marketplace app</description>
 	
 	<modules>
 		<module>checkout-microservice</module>
