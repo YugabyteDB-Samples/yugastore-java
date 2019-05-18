@@ -1,8 +1,8 @@
 spring:
   application:
-    name: products-microservice
+    name: api-gateway-microservice
 server:
-  port: 8082
+  port: 8081
 eureka:
   client:
     serviceUrl:

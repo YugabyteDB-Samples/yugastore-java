@@ -6,10 +6,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class CronosCheckoutApiApplication {
+public class CheckoutService {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CronosCheckoutApiApplication.class, args);
+		SpringApplication.run(CheckoutService.class, args);
 	}
 
 }

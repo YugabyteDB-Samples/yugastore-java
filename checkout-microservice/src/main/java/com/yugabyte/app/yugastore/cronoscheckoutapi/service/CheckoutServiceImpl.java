@@ -11,22 +11,18 @@ import org.springframework.stereotype.Service;
 import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.ShoppingCart;
 import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.ShoppingCartKey;
 import com.yugabyte.app.yugastore.cronoscheckoutapi.repositories.OrderRepository;
-import com.yugabyte.app.yugastore.cronoscheckoutapi.repositories.ProductInventoryRepository;
 import com.yugabyte.app.yugastore.cronoscheckoutapi.repositories.ShoppingCartRepository;
 
 @Service
-public class OrderCheckoutService {
+public class CheckoutServiceImpl {
 
 	private static final int DEFAULT_QUANTITY = 1;
 	private final OrderRepository orderRepository;
-	private final ProductInventoryRepository productInventoryRepository;
 	private final ShoppingCartRepository shoppingCartRepository;
 
 	@Autowired
-	public OrderCheckoutService(OrderRepository orderRepository, ProductInventoryRepository productInventoryRepository,
-			ShoppingCartRepository shoppingCartRepository) {
+	public CheckoutServiceImpl(OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository) {
 		this.orderRepository = orderRepository;
-		this.productInventoryRepository = productInventoryRepository;
 		this.shoppingCartRepository = shoppingCartRepository;
 	}
 
@@ -41,7 +37,6 @@ public class OrderCheckoutService {
 		ShoppingCartKey currentKey = new ShoppingCartKey(userId, asin);
 		String shoppingCartKeyStr = userId + "-" + asin;
 		if (shoppingCartRepository.findById(shoppingCartKeyStr).isPresent()) {
-//		if (shoppingCartRepository.findByUserIdAndAsin(userId).isPresent()) {
 			shoppingCartRepository.updateQuantityForShoppingCart(userId, asin);
 			System.out.println("Adding product: " + asin);
 		} else {

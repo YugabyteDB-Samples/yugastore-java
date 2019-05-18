@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yugabyte.app.yugastore.cronoscheckoutapi.service.OrderCheckoutService;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.service.CheckoutServiceImpl;
 
 @RestController
 @RequestMapping(value = "/checkout-microservice")
-public class ShoppingCartController {
+public class CheckoutController {
 	
 	@Autowired
-	OrderCheckoutService orderCheckoutService;
+	CheckoutServiceImpl orderCheckoutService;
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/shoppingCart/addProduct", produces = "application/json")
 	public String addProductToCart(@RequestParam("userid") String userId, 
