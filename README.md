@@ -51,7 +51,17 @@ $ mvn spring-boot:run
 
 Verify this is running by browsing to the [Spring Eureka Service Discovery dashboard](http://localhost:8761/).
 
-## Step 2: Start the products microservice
+## Step 2: Start the api gateway microservice
+
+To run the products microservice, do the following in a separate shell:
+
+```
+$ cd api-gateway-microservice/
+$ mvn spring-boot:run
+```
+
+
+## Step 3: Start the products microservice
 
 To run the products microservice, do the following in a separate shell:
 
@@ -60,7 +70,7 @@ $ cd products-microservice/
 $ mvn spring-boot:run
 ```
 
-## Step 3: Start the checkout microservice
+## Step 4: Start the checkout microservice
 
 To run the products microservice, do the following in a separate shell:
 
@@ -70,7 +80,7 @@ $ mvn spring-boot:run
 ```
 
 
-## Step 4: Start the UI
+## Step 5: Start the UI
 
 To do this, simply run `npm start` from the `frontend` directory in a separate shell:
 
