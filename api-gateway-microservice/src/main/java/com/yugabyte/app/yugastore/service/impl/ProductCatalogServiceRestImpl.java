@@ -1,5 +1,7 @@
 package com.yugabyte.app.yugastore.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -25,5 +27,10 @@ public class ProductCatalogServiceRestImpl implements ProductCatalogServiceRest 
   public ProductMetadata getProductDetails(String asin) {
     ProductMetadata result = productCatalogRestClient.getProductDetails(asin);
     return result;
+  }
+
+  @Override
+  public List<ProductMetadata> getProducts(int limit, int offset) {
+    return productCatalogRestClient.getProducts(limit, offset);
   }
 }

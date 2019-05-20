@@ -15,7 +15,6 @@ import com.yugabyte.app.yugastore.domain.CheckoutStatus;
 import com.yugabyte.app.yugastore.domain.Order;
 import com.yugabyte.app.yugastore.exception.NotEnoughProductsInStockException;
 import com.yugabyte.app.yugastore.service.CheckoutService;
-import com.yugabyte.app.yugastore.service.ShoppingCartService;
 import com.yugabyte.app.yugastore.service.ShoppingCartServiceRest;
 
 @RestController

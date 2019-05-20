@@ -1,8 +1,9 @@
 package com.yugabyte.app.yugastore.cronoscheckoutapi.controller;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,8 +22,13 @@ public class ProductCatalogController {
   
   @RequestMapping(method = RequestMethod.GET, value = "/product/{asin}", produces = "application/json")
   public ProductMetadata getProductDetails(@PathVariable String asin) {
-    System.out.println("[KAR: DEBUG] " + "Got request: getProductDetails(" + asin + ")");
     ProductMetadata productMetadata = productService.findById(asin).get();
     return productMetadata;
+  }  
+
+
+  @RequestMapping(method = RequestMethod.GET, value = "/products", produces = "application/json")
+  public List<ProductMetadata> getProducts(@Param("limit") int limit, @Param("offset") int offset) {
+    return productService.findAllProductsPageable(limit, offset);
   }  
 }
