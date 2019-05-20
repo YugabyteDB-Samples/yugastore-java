@@ -22,8 +22,6 @@ import com.yugabyte.app.yugastore.service.ShoppingCartServiceRest;
 @RequestMapping(value = "/api/v1")
 public class ShoppingCartController {
 
-//	private final ShoppingCartService shoppingCartService;
-
 	private final ShoppingCartServiceRest shoppingCartServiceRest;
 
 	private final CheckoutService checkoutService;
@@ -48,12 +46,9 @@ public class ShoppingCartController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/shoppingCart/addProduct", produces = "application/json")
 	public ResponseEntity<?> addProductToCart(@RequestParam("asin") String asin) {
-//		productService.findById(asin).ifPresent(shoppingCartService::addProduct);
 		String userId = "u1001";
 		shoppingCartServiceRest.addProduct(userId, asin);
 		Map<String, Integer> productsInCart = shoppingCartServiceRest.getProductsInCart(userId);
-//		shoppingCartService.addProduct(asin);
-//		Map<String, Integer> productsInCart = shoppingCartService.getProductsInCart();
 
 		if (productsInCart == null) {
 			return new ResponseEntity<Map<String, Integer>>(productsInCart, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,7 +59,6 @@ public class ShoppingCartController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/shoppingCart/removeProduct", produces = "application/json")
 	public ResponseEntity<Map<String, Integer>> removeProductFromCart(@RequestParam("asin") String asin) {
-//		productService.findById(asin).ifPresent(shoppingCartService::removeProduct);
 		String userId = "u1001";
 		shoppingCartServiceRest.removeProduct(userId, asin);
 		Map<String, Integer> productsInCart = shoppingCartServiceRest.getProductsInCart(userId);

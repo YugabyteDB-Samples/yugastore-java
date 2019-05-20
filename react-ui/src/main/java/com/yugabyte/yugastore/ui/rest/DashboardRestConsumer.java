@@ -57,13 +57,16 @@ public class DashboardRestConsumer {
 		return productListJsonArray.toString();
 	}
 
+	/**
+	 * Loads the details page of any product.
+	 */
 	public String getProductDetails(String asin) {
 
-		String restURL = restUrlBase + "productmetadata/" + asin;
+		String restURL = restUrlBase + "product/" + asin;
 		ResponseEntity<String> rateResponse =
-		        restTemplate.exchange(restURL,
-		                    HttpMethod.GET, null, new ParameterizedTypeReference<String>() {
-		            });
+		  restTemplate.exchange(
+		  	restURL,
+				HttpMethod.GET, null, new ParameterizedTypeReference<String>() {});
 		String productDetailsJsonResponse = rateResponse.getBody();
 		return productDetailsJsonResponse;
 	}	

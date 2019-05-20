@@ -11,7 +11,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import com.yugabyte.app.yugastore.domain.ProductMetadata;
 
-@RepositoryRestResource(path = "productmetadata")
+@RepositoryRestResource(path = "product")
 public interface ProductMetadataRepo extends CassandraRepository<ProductMetadata, String> {
 	
 	@Query("SELECT * FROM cronos.products limit ?0 offset ?1")

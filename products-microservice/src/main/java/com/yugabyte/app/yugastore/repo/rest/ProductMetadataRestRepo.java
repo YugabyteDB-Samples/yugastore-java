@@ -22,6 +22,7 @@ import com.yugabyte.app.yugastore.domain.ProductMetadata;
 import com.yugabyte.app.yugastore.repo.ProductMetadataRepo;
 
 @RepositoryRestController
+@RequestMapping(value = "/products-microservice")
 public class ProductMetadataRestRepo {
 
 	private final ProductMetadataRepo repository;
