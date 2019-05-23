@@ -1,4 +1,4 @@
-package com.yugabyte.app.yugastore.cronoscheckoutapi.controller;
+package com.yugabyte.app.yugastore.controller;
 
 import java.util.List;
 
@@ -11,14 +11,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yugabyte.app.yugastore.domain.ProductMetadata;
+import com.yugabyte.app.yugastore.domain.ProductRanking;
 import com.yugabyte.app.yugastore.service.ProductService;
+import com.yugabyte.app.yugastore.service.ProductRankingService;
 
 @RestController
 @RequestMapping(value = "/products-microservice")
 public class ProductCatalogController {
   
+  // This service is used to lookup metadata of products by their id.
   @Autowired
   ProductService productService;
+
+  // This service is used to lookup the top products by sales rank in a category.
+  @Autowired
+  ProductRankingService productRankingService;
   
   @RequestMapping(method = RequestMethod.GET, value = "/product/{asin}", produces = "application/json")
   public ProductMetadata getProductDetails(@PathVariable String asin) {
@@ -26,9 +33,15 @@ public class ProductCatalogController {
     return productMetadata;
   }  
 
-
   @RequestMapping(method = RequestMethod.GET, value = "/products", produces = "application/json")
   public List<ProductMetadata> getProducts(@Param("limit") int limit, @Param("offset") int offset) {
     return productService.findAllProductsPageable(limit, offset);
+  }  
+
+  @RequestMapping(method = RequestMethod.GET, value = "/products/category/{category}", produces = "application/json")
+  public List<ProductRanking> getProductsByCategory(@PathVariable String category,
+                                                    @Param("limit") int limit,
+                                                    @Param("offset") int offset) {
+    return productRankingService.getProductsByCategory(category, limit, offset);
   }  
 }

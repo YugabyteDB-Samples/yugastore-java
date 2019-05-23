@@ -38,8 +38,7 @@ class Products extends Component {
     const limit = this.props.limit || 12 || nextLimit;
     const offset = this.props.offset || nextOffset || 0;
     if (nextCategory) {
-      url = '/products/category?';
-      query = 'name=' + nextCategory + '&';
+      url = '/products/category/' + nextCategory + '?';
     }
     else {
       url = '/products?';

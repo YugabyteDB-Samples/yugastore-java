@@ -12,6 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -23,27 +24,26 @@ public class DashboardRestConsumer {
 	@Autowired
 	RestTemplate restTemplate;
 	
-	@Value("${cronos.yugabyte.api:http://localhost:8080/api/v1}")
+	@Value("${cronos.yugabyte.api:http://localhost:8081/api/v1}")
 	String restUrlBase;
 
 	public String getHomePageProducts(int limit, int offset) {
 
-		String restURL = restUrlBase + "productmetadata/search/products?limit=" + limit + "&offset=" + offset;
+		String restURL = restUrlBase + "products?limit=" + limit + "&offset=" + offset;
 		ResponseEntity<String> rateResponse =
 		        restTemplate.exchange(restURL,
 		                    HttpMethod.GET, null, new ParameterizedTypeReference<String>() {
 		            });
 		String productListJsonResponse = rateResponse.getBody();
 
-		JsonObject jsonObject = new Gson().fromJson(productListJsonResponse, JsonObject.class);
-		JsonObject productListjsonObject = jsonObject.get("_embedded").getAsJsonObject();
-		JsonElement productListJsonArray = productListjsonObject.get("productMetadatas").deepCopy();
+		JsonElement productListJsonArray =
+			new Gson().fromJson(productListJsonResponse, JsonArray.class);
 		return productListJsonArray.toString();
 	}
 
 	public String getProductsByCategory(String name, int limit, int offset) {
 		String encodedName = name.replace(" ","%20").replace("&","%26").replace(",","%2C");
-		String restURL = restUrlBase + "productRankings/search/category?name=" + encodedName+ "&limit=" + limit + "&offset=" + offset;
+		String restURL = restUrlBase + "products/category/" + encodedName+ "?limit=" + limit + "&offset=" + offset;
 		System.out.println(restURL);
 		ResponseEntity<String> rateResponse =
 		        restTemplate.exchange(restURL,
@@ -51,9 +51,8 @@ public class DashboardRestConsumer {
 		            });
 		String productListJsonResponse = rateResponse.getBody();
 
-		JsonObject jsonObject = new Gson().fromJson(productListJsonResponse, JsonObject.class);
-		JsonObject productListjsonObject = jsonObject.get("_embedded").getAsJsonObject();
-		JsonElement productListJsonArray = productListjsonObject.get("productRankings").deepCopy();
+		JsonElement productListJsonArray =
+			new Gson().fromJson(productListJsonResponse, JsonArray.class);
 		return productListJsonArray.toString();
 	}
 

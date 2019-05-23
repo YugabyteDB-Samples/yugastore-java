@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yugabyte.app.yugastore.domain.ProductMetadata;
+import com.yugabyte.app.yugastore.domain.ProductRanking;
 import com.yugabyte.app.yugastore.exception.NotEnoughProductsInStockException;
 import com.yugabyte.app.yugastore.service.ProductCatalogServiceRest;
 
@@ -51,6 +52,15 @@ public class ProductCatalogController {
                                                                          @Param("offset") int offset) {
     List<ProductMetadata> products = productCatalogServiceRest.getProducts(limit, offset);
     return new ResponseEntity<List<ProductMetadata>>(products, HttpStatus.OK);
+  }
+
+  @RequestMapping(method = RequestMethod.GET, value = "/products/category/{category}", produces = "application/json")
+  public @ResponseBody ResponseEntity<List<ProductRanking>> getProductsByCategory(
+      @PathVariable("category") String category,
+      @Param("limit") int limit,
+      @Param("offset") int offset) {
+    List<ProductRanking> products = productCatalogServiceRest.getProductsByCategory(category, limit, offset);
+    return new ResponseEntity<List<ProductRanking>>(products, HttpStatus.OK);
   }
 
 }

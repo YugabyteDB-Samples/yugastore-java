@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.yugabyte.app.yugastore.domain.ProductMetadata;
+import com.yugabyte.app.yugastore.domain.ProductRanking;
 import com.yugabyte.app.yugastore.rest.clients.ProductCatalogRestClient;
 import com.yugabyte.app.yugastore.service.ProductCatalogServiceRest;
 
@@ -32,5 +33,10 @@ public class ProductCatalogServiceRestImpl implements ProductCatalogServiceRest 
   @Override
   public List<ProductMetadata> getProducts(int limit, int offset) {
     return productCatalogRestClient.getProducts(limit, offset);
+  }
+
+  @Override
+  public List<ProductRanking> getProductsByCategory(String category, int limit, int offset) {
+    return productCatalogRestClient.getProductsByCategory(category, limit, offset);
   }
 }

@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.yugabyte.app.yugastore.domain.ProductRanking;
 import com.yugabyte.app.yugastore.repo.ProductRankingRepository;
 import com.yugabyte.app.yugastore.service.ProductRankingService;
 
-public class ProductRankingServiceImpl implements ProductRankingService{
+@Service
+public class ProductRankingServiceImpl implements ProductRankingService {
 	
 	private final ProductRankingRepository productRankingRepository;
 	
