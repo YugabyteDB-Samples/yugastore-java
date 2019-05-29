@@ -17,6 +17,7 @@
 		<module>checkout-microservice</module>
 		<module>api-gateway-microservice</module>
 		<module>react-ui</module>
+		<module>login-microservice</module>
 	</modules>
 
 	<build>
