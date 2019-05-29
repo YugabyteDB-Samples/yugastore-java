@@ -89,5 +89,5 @@ $ cd react-ui
 $ mvn spring-boot:run
 ```
 
-Now browse to the marketplace app at [http://localhost:8082/](http://localhost:8080/).
+Now browse to the marketplace app at [http://localhost:8080/](http://localhost:8080/).
 
