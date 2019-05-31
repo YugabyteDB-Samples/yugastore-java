@@ -68,17 +68,3 @@ CREATE TABLE cronos.product_inventory (
     quantity int
 ) WITH default_time_to_live = 0
     AND transactions = {'enabled': 'true'};
-    
-    
-CREATE TABLE cronos.shopping_cart (
-    session_id text,
-    asin text,
-    time_added text,
-    quantity int,
-    PRIMARY KEY (session_id, asin)
-) WITH CLUSTERING ORDER BY (asin ASC)
-    AND default_time_to_live = 0
-    AND transactions = {'enabled': 'true'};   
-
-//cat asinlist | awk '{print $1}' | tr '\n' ',' > asins.txt
-// bin/cqlsh 35.232.104.128 --connect-timeout=3600 --request-timeout=3600 -e "paging off; select asin from cronos.products limit 1000000" > asinlist

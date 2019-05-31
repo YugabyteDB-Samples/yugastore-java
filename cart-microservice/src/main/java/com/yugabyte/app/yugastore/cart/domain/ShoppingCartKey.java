@@ -1,4 +1,4 @@
-package com.yugabyte.app.yugastore.cronoscheckoutapi.domain;
+package com.yugabyte.app.yugastore.cart.domain;
 
 import java.io.Serializable;
 

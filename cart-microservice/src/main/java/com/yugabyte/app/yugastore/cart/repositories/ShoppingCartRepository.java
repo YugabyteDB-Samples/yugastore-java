@@ -1,4 +1,4 @@
-package com.yugabyte.app.yugastore.cronoscheckoutapi.repositories;
+package com.yugabyte.app.yugastore.cart.repositories;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.ShoppingCart;
+import com.yugabyte.app.yugastore.cart.domain.ShoppingCart;
 
 
 @RepositoryRestResource

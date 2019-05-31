@@ -1,4 +1,4 @@
-package com.yugabyte.app.yugastore.cronoscheckoutapi.domain;
+package com.yugabyte.app.yugastore.cart.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

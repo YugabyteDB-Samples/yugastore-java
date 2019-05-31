@@ -1,4 +1,4 @@
-package com.yugabyte.yugastore.eureka;
+package com.yugabyte.app.yugastore;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class EurekaServerLocalApplicationTests {
+public class CartMicroserviceApplicationTests {
 
 	@Test
 	public void contextLoads() {
