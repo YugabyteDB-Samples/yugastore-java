@@ -1,96 +1,110 @@
 package com.yugabyte.app.yugastore.cronoscheckoutapi.service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
-import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.ShoppingCart;
-import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.ShoppingCartKey;
-import com.yugabyte.app.yugastore.cronoscheckoutapi.repositories.OrderRepository;
-import com.yugabyte.app.yugastore.cronoscheckoutapi.repositories.ShoppingCartRepository;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.Order;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.ProductInventory;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.domain.ProductMetadata;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.exception.NotEnoughProductsInStockException;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.repositories.ProductInventoryRepository;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.rest.clients.ProductCatalogRestClient;
+import com.yugabyte.app.yugastore.cronoscheckoutapi.rest.clients.ShoppingCartRestClient;
+
 
 @Service
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Transactional
 public class CheckoutServiceImpl {
 
-	private static final int DEFAULT_QUANTITY = 1;
-	private final OrderRepository orderRepository;
-	private final ShoppingCartRepository shoppingCartRepository;
+	private final ShoppingCartRestClient shoppingCartRestClient;
+	private final ProductCatalogRestClient productCatalogRestClient;
+	private final ProductInventoryRepository productInventoryRepository;
+
+	ProductInventory productInventory;
+	ProductMetadata productDetails;
 
 	@Autowired
-	public CheckoutServiceImpl(OrderRepository orderRepository, ShoppingCartRepository shoppingCartRepository) {
-		this.orderRepository = orderRepository;
-		this.shoppingCartRepository = shoppingCartRepository;
+	public CheckoutServiceImpl(ProductInventoryRepository productInventoryRepository, 
+			ShoppingCartRestClient shoppingCartRestClient, ProductCatalogRestClient productCatalogRestClient) {
+		this.productInventoryRepository = productInventoryRepository;
+		this.shoppingCartRestClient = shoppingCartRestClient;
+		this.productCatalogRestClient = productCatalogRestClient;	
 	}
 
-	/**
-	 * If product is in the map just increment quantity by 1. If product is not in
-	 * the map with, add it with quantity 1
-	 *
-	 * @param product
-	 */
-	public void addProductToShoppingCart(String userId, String asin) {
+	@Autowired
+	private CassandraOperations cassandraTemplate;
 
-		ShoppingCartKey currentKey = new ShoppingCartKey(userId, asin);
-		String shoppingCartKeyStr = userId + "-" + asin;
-		if (shoppingCartRepository.findById(shoppingCartKeyStr).isPresent()) {
-			shoppingCartRepository.updateQuantityForShoppingCart(userId, asin);
-			System.out.println("Adding product: " + asin);
-		} else {
-			ShoppingCart currentShoppingCart = createCartObject(currentKey);
-			shoppingCartRepository.save(currentShoppingCart);
-			System.out.println("Adding product: " + asin);
-		}
-	}
+	public Order checkout(String userId) throws NotEnoughProductsInStockException {
+		Map<String, Integer> products = shoppingCartRestClient.getProductsInCart(userId);
+		System.out.println("*** In Checkout products ***");
+		StringBuilder updateCartpreparedStatement = new StringBuilder();
+		updateCartpreparedStatement.append("BEGIN TRANSACTION");
+		Order currentOrder = null;
+		StringBuilder orderDetails = new StringBuilder();
+		orderDetails.append("Customer bought these Items: ");
 
-	public Map<String, Integer> getProductsInCart(String userId) {
+		if (products.size() != 0) {
+			for (Map.Entry<String, Integer> entry : products.entrySet()) {
+				// Refresh quantity for every product before checking
+				System.out.println("*** Checking out product *** " + entry.getKey());
+				productInventory = productInventoryRepository.findById(entry.getKey()).orElse(null);
+				productDetails = productCatalogRestClient.getProductDetails(entry.getKey());
+				
+				if (productInventory.getQuantity() < entry.getValue())
+					throw new NotEnoughProductsInStockException(productDetails.getTitle(), productInventory.getQuantity());
 
-		Map<String, Integer> productsInCartAsin = new HashMap<String, Integer>();
-
-		if (shoppingCartRepository.findProductsInCartByUserId(userId).isPresent()) {
-
-			List<ShoppingCart> productsInCart = shoppingCartRepository.findProductsInCartByUserId(userId).get();
-			for (ShoppingCart item : productsInCart) {
-				productsInCartAsin.put(item.getAsin(), item.getQuantity());
+				updateCartpreparedStatement.append(" UPDATE product_inventory SET quantity = quantity - "
+						+ entry.getValue() + " where asin = '" + entry.getKey() + "' ;");
+				orderDetails.append(" Product: " + productDetails.getTitle() + ", Quantity: " + entry.getValue() + ";");
 			}
-
+			double orderTotal = getTotal(products);
+			orderDetails.append(" Order Total is : " + orderTotal);
+			currentOrder = createOrder(orderDetails.toString(), orderTotal);
+			updateCartpreparedStatement
+					.append(" INSERT INTO orders (order_id, user_id, order_details, order_time, order_total) VALUES ("
+							+ "'" + currentOrder.getId() + "', " + "'1'" + ", '" + currentOrder.getOrder_details()
+							+ "', '" + currentOrder.getOrder_time() + "'," + currentOrder.getOrder_total() + ");");
+			updateCartpreparedStatement.append(" END TRANSACTION;");
+			System.out.println("Statemet is " + updateCartpreparedStatement.toString());
+			cassandraTemplate.getCqlOperations().execute(updateCartpreparedStatement.toString());
 		}
-		return productsInCartAsin;
+		products.clear();
+		shoppingCartRestClient.clearCart(userId);
+		System.out.println("*** Checkout complete, cart cleared ***");
+		return currentOrder;
+
 	}
 
-	public void removeProductFromCart(String userId, String asin) {
-		String shoppingCartKeyStr = userId + "-" + asin;
-		if (shoppingCartRepository.findById(shoppingCartKeyStr).isPresent()) {
-			if (shoppingCartRepository.findById(shoppingCartKeyStr).get().getQuantity() > 1) {
-				shoppingCartRepository.decrementQuantityForShoppingCart(userId, asin);
-				System.out.println("Decrementing product: " + asin + " quantity");
-			} else if (shoppingCartRepository.findById(shoppingCartKeyStr).get().getQuantity() == 1) {
-				shoppingCartRepository.deleteById(shoppingCartKeyStr);
-				System.out.println("Removing product: " + asin + " since it was qty 1");
-			}
+	private Double getTotal(Map<String, Integer> products) {
+		double price = 0.0;
+		for (Map.Entry<String, Integer> entry : products.entrySet()) {
+
+			productInventory = productInventoryRepository.findById(entry.getKey()).orElse(null);
+			productDetails = productCatalogRestClient.getProductDetails(entry.getKey());
+			price = price + productDetails.getPrice() * entry.getValue();
 		}
+		return price;
 	}
 
-	private ShoppingCart createCartObject(ShoppingCartKey currentKey) {
-		ShoppingCart currentShoppingCart = new ShoppingCart();
-		currentShoppingCart.setCartKey(currentKey.getId() + "-" + currentKey.getAsin());
-		currentShoppingCart.setUserId(currentKey.getId());
-		currentShoppingCart.setAsin(currentKey.getAsin());
+	private Order createOrder(String orderDetails, double orderTotal) {
+		Order order = new Order();
 		LocalDateTime currentTime = LocalDateTime.now();
-		currentShoppingCart.setTime_added(currentTime.toString());
-		currentShoppingCart.setQuantity(DEFAULT_QUANTITY);
-
-		return currentShoppingCart;
+		order.setId(UUID.randomUUID().toString());
+		order.setUser_id(1);
+		order.setOrder_details(orderDetails);
+		order.setOrder_time(currentTime.toString());
+		order.setOrder_total(orderTotal);
+		return order;
 	}
 
-	public void clearCart(String userId) {
-
-		if (shoppingCartRepository.findProductsInCartByUserId(userId).isPresent()) {
-			shoppingCartRepository.deleteProductsInCartByUserId(userId);
-			System.out.println("Deleteing all products for user: " + userId + " since checkout was successful");
-		}
-	}
 }

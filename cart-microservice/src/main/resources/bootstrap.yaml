@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: cart-microservice
+server:
+  port: 8083
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}

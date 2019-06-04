@@ -4,4 +4,4 @@ applications:
   random-route: false
   path: target/products-microservice-0.0.1-SNAPSHOT.jar
   services:
-  - yugastore-eureka-server
+  - yugastore-service-registry

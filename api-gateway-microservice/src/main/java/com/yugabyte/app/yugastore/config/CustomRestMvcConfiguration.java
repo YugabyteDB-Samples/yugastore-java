@@ -1,6 +1,5 @@
 package com.yugabyte.app.yugastore.config;
 
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -21,7 +20,6 @@ public class CustomRestMvcConfiguration {
 	      @Override
 	      public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 	        config.setBasePath("/api/v1");
-//	    	config.setBasePath("/");
 	        config.exposeIdsFor(ProductMetadata.class, ProductRanking.class);
 	      }
 	    };

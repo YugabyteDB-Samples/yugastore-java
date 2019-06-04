@@ -1,23 +1,15 @@
 package com.yugabyte.app.yugastore.domain;
 
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
-
-@Table(value = "product_rankings")
 public class ProductRanking{
 
-	@PrimaryKey
 	private ProductRankingKey asin;
 
-	@Column(value = "sales_rank")
 	private int salesRank;
 	
 	private String title;
 	
 	private Double price;
 	
-	@Column(value = "imurl")
 	private String imUrl;
 	
 	private Integer num_reviews;

@@ -1,16 +1,9 @@
 package com.yugabyte.app.yugastore.domain;
 
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
-
-@Table(value = "product_inventory")
 public class ProductInventory {
 
-   @PrimaryKey(value="asin")
    private String id;
    
-   @Column(value = "quantity")
    private Integer quantity;
 
 	public String getId() {

@@ -1,4 +1,4 @@
-package io.pivotal.cronos.eureka;
+package com.yugabyte.yugastore.eureka;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

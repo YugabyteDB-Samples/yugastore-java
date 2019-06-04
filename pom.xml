@@ -15,6 +15,7 @@
 		<module>eureka-server-local</module>
 		<module>products-microservice</module>
 		<module>checkout-microservice</module>
+		<module>cart-microservice</module>
 		<module>api-gateway-microservice</module>
 		<module>react-ui</module>
 		<module>login-microservice</module>
