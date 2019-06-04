@@ -1,11 +1,21 @@
 # YugaStore in Java
-**NOTE: these instructions are still in progress.**
 
-This is an implementation of a sample ecommerce app. This online retail marketplace app uses Spring (Java), React and YugaByte DB. It has the following microservices:
+This is an implementation of a sample ecommerce app. This online retail marketplace app uses Spring (Java), React and YugaByte DB. It follows a microservices-oriented architecture. The architecture diagram of YugaStore is shown below.
 
-* products-microservice
-* checkout-microservice
-* react-ui
+![Architecture of microservices based retail marketplace app](yugastore-java-architecture.png)
+
+
+| Microservice         | YugaByte DB API | Default host:port | Description           |
+| -------------------- | ---------------- | ---------------- | --------------------- |
+| [service discovery](https://github.com/YugaByte/yugastore-java/tree/master/eureka-server-local) | - | [localhost:8761](http://localhost:8761) | Uses **Eureka** for localhost. All microservices register with the Eureka service. This registration information is used to discover dynamic properties of any microservice. Examples of discovery include finding the hostnames or ip addresses, the load balancer and the port on which the microservice is currently running.
+| react-ui | - | [localhost:8080](http://localhost:8080) | A react-based UI for the eCommerce online marketplace app.
+| api-gateway | - | [localhost:8081](http://localhost:8081) | This microservice handles all the external API requests. The UI only communicates with this microservice.
+| products | YCQL | [localhost:8082](http://localhost:8082) | This microservice contains the entire product catalog. It can list products by categories, return the most popular products as measured by sales rank, etc.
+| cart | YCQL | [localhost:8083](http://localhost:8083) | This microservice deals with users adding items to the shopping cart. It has to be necessarily highly available, low latency and often multi-region.
+| checkout | YSQL | [localhost:8086](http://localhost:8086) | This deals with the checkout process and the placed order. It also manages the inventory of all the products because it needs to ensure the product the user is about to order is still in stock.
+| login | YSQL | [localhost:8085](http://localhost:8085) | Handles login and authentication of the users. *Note that this is still a work in progress.*
+
+
 
 # Building the app
 
