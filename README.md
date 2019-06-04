@@ -10,6 +10,14 @@ This repo contains all the instructions you need to [run the app on your laptop]
 
 You can also [try the app out](https://yugastore-ui.cfapps.io/) online, it is hosted on [Pivotal Web Services](https://run.pivotal.io/).
 
+# Features
+
+* Written fully in Spring
+* Desgined for multi-region and Kubernetes-native deployments
+* Features 6 microservices
+* Uses a discovery service that the microservices register with
+* Sample data has over 6K products in the store
+
 ## Architecture
 
 The architecture diagram of YugaStore is shown below.
@@ -26,11 +34,6 @@ The architecture diagram of YugaStore is shown below.
 | [cart](https://github.com/YugaByte/yugastore-java/tree/master/cart-microservice) | YCQL | [localhost:8083](http://localhost:8083) | This microservice deals with users adding items to the shopping cart. It has to be necessarily highly available, low latency and often multi-region.
 | [checkout](https://github.com/YugaByte/yugastore-java/tree/master/checkout-microservice) | YSQL | [localhost:8086](http://localhost:8086) | This deals with the checkout process and the placed order. It also manages the inventory of all the products because it needs to ensure the product the user is about to order is still in stock.
 | [login](https://github.com/YugaByte/yugastore-java/tree/master/login-microservice) | YSQL | [localhost:8085](http://localhost:8085) | Handles login and authentication of the users. *Note that this is still a work in progress.*
-
-
-# Features
-
-
 
 # Build and run
 
