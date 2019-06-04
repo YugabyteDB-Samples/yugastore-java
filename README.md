@@ -79,8 +79,16 @@ $ cd checkout-microservice/
 $ mvn spring-boot:run
 ```
 
+## Step 5: Start the checkout microservice
 
-## Step 5: Start the UI
+To run the cart microservice, do the following in a separate shell:
+
+```
+$ cd cart-microservice/
+$ mvn spring-boot:run
+```
+
+## Step 6: Start the UI
 
 To do this, simply run `npm start` from the `frontend` directory in a separate shell:
 
