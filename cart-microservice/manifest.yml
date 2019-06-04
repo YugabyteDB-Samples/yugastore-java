@@ -1,0 +1,7 @@
+---
+applications:
+- name: cart-microservice
+  random-route: false
+  path: target/cart-microservice-0.0.1-SNAPSHOT.jar
+  services:
+  - yugastore-service-registry

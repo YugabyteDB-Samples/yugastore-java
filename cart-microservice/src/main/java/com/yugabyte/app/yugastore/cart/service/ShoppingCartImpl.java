@@ -6,11 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.yugabyte.app.yugastore.cart.domain.ShoppingCart;
 import com.yugabyte.app.yugastore.cart.domain.ShoppingCartKey;
 import com.yugabyte.app.yugastore.cart.repositories.ShoppingCartRepository;
 
+@Service
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Transactional
 public class ShoppingCartImpl {
 	
 	private static final int DEFAULT_QUANTITY = 1;

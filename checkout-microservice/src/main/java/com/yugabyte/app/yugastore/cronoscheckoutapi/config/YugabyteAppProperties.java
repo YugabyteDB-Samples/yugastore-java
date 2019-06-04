@@ -1,4 +1,4 @@
-package com.yugabyte.app.yugastore.config;
+package com.yugabyte.app.yugastore.cronoscheckoutapi.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;

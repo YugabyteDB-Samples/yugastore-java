@@ -3,12 +3,9 @@ package com.yugabyte.app.yugastore.cronoscheckoutapi.domain;
 import java.util.List;
 import java.util.Set;
 
-
-public class ProductMetadata{
-
+public class ProductMetadata {
 	
-    private String id;
-  //String asin;
+    String id;
     
 	String brand;
 	
@@ -25,9 +22,9 @@ public class ProductMetadata{
 	List<String> also_bought;
 	
 	List<String> also_viewed;
-	
+
 	List<String> bought_together;
-	
+
 	List<String> buy_after_viewing;
 	
 	Integer num_reviews;

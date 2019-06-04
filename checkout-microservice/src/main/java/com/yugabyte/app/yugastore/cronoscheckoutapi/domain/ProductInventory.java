@@ -1,19 +1,16 @@
 package com.yugabyte.app.yugastore.cronoscheckoutapi.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-@Entity(name = "product_inventory")
-@Table(name = "product_inventory")
+@Table(value = "product_inventory")
 public class ProductInventory {
 
-   @Id
-   @Column(name = "asin")
+   @PrimaryKey(value="asin")
    private String id;
    
-   @Column(name = "quantity")
+   @Column(value = "quantity")
    private Integer quantity;
 
 	public String getId() {

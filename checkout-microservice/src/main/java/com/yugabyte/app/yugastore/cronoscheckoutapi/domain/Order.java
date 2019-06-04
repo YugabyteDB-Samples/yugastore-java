@@ -1,28 +1,25 @@
 package com.yugabyte.app.yugastore.cronoscheckoutapi.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-@Entity(name = "orders")
-@Table(name = "orders")
+@Table(value="orders")
 public class Order {
 	
-    @Id
-    @Column(name = "order_id")
+    @PrimaryKey(value="order_id")
     private String id;
     
-    @Column(name = "user_id")
+    @Column(value = "user_id")
     private Integer user_id;
     
-    @Column(name = "order_details")
+    @Column(value = "order_details")
     private String order_details;
     
-    @Column(name = "order_time")
+    @Column(value = "order_time")
     private String order_time;
     
-    @Column(name = "order_total")
+    @Column(value = "order_total")
     private Double order_total;
 
 	public String getId() {

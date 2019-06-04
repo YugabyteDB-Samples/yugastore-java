@@ -1,6 +1,6 @@
 spring:
   application:
-    name: checkout-microservice
+    name: cart-microservice
 server:
   port: 8083
 eureka:

@@ -1,4 +1,4 @@
-package com.yugabyte.app.yugastore.domain;
+package com.yugabyte.app.yugastore.cronoscheckoutapi.domain;
 
 public class ProductRanking{
 
@@ -9,7 +9,7 @@ public class ProductRanking{
 	private String title;
 	
 	private Double price;
-	
+
 	private String imUrl;
 	
 	private Integer num_reviews;

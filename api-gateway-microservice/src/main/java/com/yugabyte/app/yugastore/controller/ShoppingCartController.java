@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yugabyte.app.yugastore.domain.CheckoutStatus;
-import com.yugabyte.app.yugastore.domain.Order;
-import com.yugabyte.app.yugastore.exception.NotEnoughProductsInStockException;
-import com.yugabyte.app.yugastore.service.CheckoutService;
+import com.yugabyte.app.yugastore.service.CheckoutServiceRest;
 import com.yugabyte.app.yugastore.service.ShoppingCartServiceRest;
 
 @RestController
@@ -23,12 +21,13 @@ public class ShoppingCartController {
 
 	private final ShoppingCartServiceRest shoppingCartServiceRest;
 
-	private final CheckoutService checkoutService;
+	private final CheckoutServiceRest checkoutServiceRest;
 
 	@Autowired
-	public ShoppingCartController(CheckoutService checkoutService, ShoppingCartServiceRest shoppingCartServiceRest) {
-		this.checkoutService = checkoutService;
+	public ShoppingCartController(ShoppingCartServiceRest shoppingCartServiceRest,
+			CheckoutServiceRest checkoutServiceRest) {
 		this.shoppingCartServiceRest = shoppingCartServiceRest;
+		this.checkoutServiceRest = checkoutServiceRest;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/shoppingCart", produces = "application/json")
@@ -70,26 +69,8 @@ public class ShoppingCartController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/shoppingCart/checkout", produces = "application/json")
 	public ResponseEntity<CheckoutStatus> checkout() {
-		String userId = "u1001";
-		CheckoutStatus checkoutStatus = new CheckoutStatus();
-		try {
-			Order currentOrder = checkoutService.checkout(userId);
-			if (currentOrder != null) {
-				checkoutStatus.setOrderNumber(currentOrder.getId().toString());
-				checkoutStatus.setStatus(CheckoutStatus.SUCCESS);
-				checkoutStatus.setOrderDetails(currentOrder.getOrder_details());
-				System.out
-						.println("Order is : " + currentOrder.getId() + " Details: " + currentOrder.getOrder_details());
-			} else {
-				checkoutStatus.setOrderNumber("");
-				checkoutStatus.setStatus(CheckoutStatus.FAILURE);
-				checkoutStatus.setOrderDetails("Product is Out of Stock!");
-			}
-		} catch (NotEnoughProductsInStockException e) {
-			checkoutStatus.setOrderNumber("");
-			checkoutStatus.setStatus(CheckoutStatus.FAILURE);
-			return new ResponseEntity<CheckoutStatus>(checkoutStatus, HttpStatus.OK);
-		}
+		
+		CheckoutStatus checkoutStatus = checkoutServiceRest.checkout();
 		return new ResponseEntity<CheckoutStatus>(checkoutStatus, HttpStatus.OK);
 	}
 
