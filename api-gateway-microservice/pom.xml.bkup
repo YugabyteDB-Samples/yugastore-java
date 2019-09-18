@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.yugabyte.app.yugastore</groupId>
-	<artifactId>products-microservice</artifactId>
+	<artifactId>api-gateway-microservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>products-microservice</name>
-	<description>Microservice that powers the product listings and details.</description>
+	<name>api-gateway-microservice</name>
+	<description>Gateway for all REST APIs for the retail marketplace app.</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -46,21 +46,12 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-cassandra</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.datastax.cassandra</groupId>
-   					<artifactId>cassandra-driver-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-		  <groupId>com.yugabyte</groupId>
-		  <artifactId>cassandra-driver-core</artifactId>
-		  <version>3.2.0-yb-18</version>
-		</dependency>
+
+		<!-- Spring MVC -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
@@ -73,6 +64,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>io.pivotal.spring.cloud</groupId>
+			<artifactId>spring-cloud-services-starter-config-client</artifactId>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -81,48 +77,57 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		
-        <!-- Spring MVC -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
- <!--        
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
-        </dependency>
--->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		
     <!-- Jackson for Java - JSON conversion -->
-    	<dependency>
-	        <groupId>com.fasterxml.jackson.core</groupId>
-	        <artifactId>jackson-core</artifactId>
-	    </dependency>
-
-    <!-- Jackson for Java - JSON conversion -->
-    	<dependency>
-	        <groupId>com.fasterxml.jackson.core</groupId>
-	        <artifactId>jackson-databind</artifactId>
-	    </dependency>
-
-    <!-- Jackson for Java - JSON conversion -->
-    	<dependency>
-	        <groupId>com.fasterxml.jackson.core</groupId>
-	        <artifactId>jackson-annotations</artifactId>
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
         </dependency>
+
+    <!-- Jackson for Java - JSON conversion -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+    <!-- Jackson for Java - JSON conversion -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        
+        <!-- Spring Cloud Services Dependencies -->
+        <dependency>
+            <groupId>io.pivotal.spring.cloud</groupId>
+            <artifactId>spring-cloud-services-dependencies</artifactId>
+            <version>2.1.2.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>Greenwich.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+	      <groupId>io.pivotal.spring.cloud</groupId>
+	      <artifactId>spring-cloud-services-starter-service-registry</artifactId>
+	      <version>2.1.2.RELEASE</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.springframework.cloud</groupId>
+		    <artifactId>spring-cloud-starter-feign</artifactId>
+		    <version>1.4.6.RELEASE</version>
+		</dependency>
+	    <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
         
 	</dependencies>
 

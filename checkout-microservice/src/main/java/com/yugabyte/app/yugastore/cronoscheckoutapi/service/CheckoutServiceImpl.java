@@ -20,6 +20,12 @@ import com.yugabyte.app.yugastore.cronoscheckoutapi.repositories.ProductInventor
 import com.yugabyte.app.yugastore.cronoscheckoutapi.rest.clients.ProductCatalogRestClient;
 import com.yugabyte.app.yugastore.cronoscheckoutapi.rest.clients.ShoppingCartRestClient;
 
+import feign.Client;
+import feign.Contract;
+import feign.Feign;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
+
 
 @Service
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -32,14 +38,33 @@ public class CheckoutServiceImpl {
 
 	ProductInventory productInventory;
 	ProductMetadata productDetails;
-
-	@Autowired
-	public CheckoutServiceImpl(ProductInventoryRepository productInventoryRepository, 
-			ShoppingCartRestClient shoppingCartRestClient, ProductCatalogRestClient productCatalogRestClient) {
-		this.productInventoryRepository = productInventoryRepository;
-		this.shoppingCartRestClient = shoppingCartRestClient;
-		this.productCatalogRestClient = productCatalogRestClient;	
-	}
+	
+	  @Autowired
+	  public CheckoutServiceImpl (ProductInventoryRepository productInventoryRepository, 
+			  Decoder decoder, Encoder encoder, Client client, 
+				Contract contract) {
+		  this.productInventoryRepository = productInventoryRepository;
+		  this.shoppingCartRestClient = Feign.builder().client(client)
+					.encoder(encoder)
+					.decoder(decoder)
+					.contract(contract)
+					.target(ShoppingCartRestClient.class, 
+							"http://cart-microservice");
+		  this.productCatalogRestClient = Feign.builder().client(client)
+					.encoder(encoder)
+					.decoder(decoder)
+					.contract(contract)
+					.target(ProductCatalogRestClient.class, 
+							"http://products-microservice");
+	  }
+	  
+//	@Autowired
+//	public CheckoutServiceImpl(ProductInventoryRepository productInventoryRepository, 
+//			ShoppingCartRestClient shoppingCartRestClient, ProductCatalogRestClient productCatalogRestClient) {
+//		this.productInventoryRepository = productInventoryRepository;
+//		this.shoppingCartRestClient = shoppingCartRestClient;
+//		this.productCatalogRestClient = productCatalogRestClient;	
+//	}
 
 	@Autowired
 	private CassandraOperations cassandraTemplate;

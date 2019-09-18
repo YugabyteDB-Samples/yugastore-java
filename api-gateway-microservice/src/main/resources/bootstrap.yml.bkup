@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: api-gateway-microservice
+  cloud:
+    kubernetes:
+      enabled: false
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+#server:
+#  port: 8081
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}

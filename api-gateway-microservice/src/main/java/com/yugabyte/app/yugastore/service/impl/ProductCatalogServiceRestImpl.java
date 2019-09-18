@@ -13,15 +13,32 @@ import com.yugabyte.app.yugastore.domain.ProductRanking;
 import com.yugabyte.app.yugastore.rest.clients.ProductCatalogRestClient;
 import com.yugabyte.app.yugastore.service.ProductCatalogServiceRest;
 
+import feign.Client;
+import feign.Contract;
+import feign.Feign;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
+
 @Service
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ProductCatalogServiceRestImpl implements ProductCatalogServiceRest {
 
   private final ProductCatalogRestClient productCatalogRestClient;
 
+//  @Autowired
+//  public ProductCatalogServiceRestImpl(ProductCatalogRestClient productCatalogRestClient) {
+//    this.productCatalogRestClient = productCatalogRestClient;
+//  }
+  
   @Autowired
-  public ProductCatalogServiceRestImpl(ProductCatalogRestClient productCatalogRestClient) {
-    this.productCatalogRestClient = productCatalogRestClient;
+  public ProductCatalogServiceRestImpl(Decoder decoder, Encoder encoder, Client client, 
+			Contract contract) {
+	  this.productCatalogRestClient = Feign.builder().client(client)
+				.encoder(encoder)
+				.decoder(decoder)
+				.contract(contract)
+				.target(ProductCatalogRestClient.class, 
+						"http://products-microservice");
   }
 
   @Override

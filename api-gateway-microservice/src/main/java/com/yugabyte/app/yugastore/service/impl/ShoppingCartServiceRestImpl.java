@@ -8,8 +8,15 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.yugabyte.app.yugastore.rest.clients.ProductCatalogRestClient;
 import com.yugabyte.app.yugastore.rest.clients.ShoppingCartRestClient;
 import com.yugabyte.app.yugastore.service.ShoppingCartServiceRest;
+
+import feign.Client;
+import feign.Contract;
+import feign.Feign;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
 
 @Service
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -17,10 +24,21 @@ public class ShoppingCartServiceRestImpl implements ShoppingCartServiceRest {
 
 	private final ShoppingCartRestClient shoppingCartRestClient;
 
+//	@Autowired
+//	public ShoppingCartServiceRestImpl(ShoppingCartRestClient shoppingCartRestClient) {
+//		this.shoppingCartRestClient = shoppingCartRestClient;
+//	}
+	
 	@Autowired
-	public ShoppingCartServiceRestImpl(ShoppingCartRestClient shoppingCartRestClient) {
-		this.shoppingCartRestClient = shoppingCartRestClient;
-	}
+	  public ShoppingCartServiceRestImpl(Decoder decoder, Encoder encoder, Client client, 
+				Contract contract) {
+		  this.shoppingCartRestClient = Feign.builder().client(client)
+					.encoder(encoder)
+					.decoder(decoder)
+					.contract(contract)
+					.target(ShoppingCartRestClient.class, 
+							"http://cart-microservice");
+	  }
 
 	@Override
 	public String addProduct(String userId, String asin) {

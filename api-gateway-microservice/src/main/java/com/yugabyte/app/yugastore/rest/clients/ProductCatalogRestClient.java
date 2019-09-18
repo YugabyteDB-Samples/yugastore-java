@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.yugabyte.app.yugastore.domain.ProductMetadata;
 import com.yugabyte.app.yugastore.domain.ProductRanking;
 
-@FeignClient("products-microservice")
+//@FeignClient("products-microservice")
 @RequestMapping("/products-microservice")
 public interface ProductCatalogRestClient {
   

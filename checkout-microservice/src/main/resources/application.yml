@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: checkout-microservice
+  cloud:
+    kubernetes:
+      enabled: true
+      reload:
+        enabled: true
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+eureka:
+  client:
+    enabled: false
+dekorate:
+  kubernetes:
+    serviceType: NodePort
+    imagePullPolicy: Always
+    group: nchandrappa
