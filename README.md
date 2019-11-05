@@ -1,6 +1,6 @@
 # YugaStore in Java
 
-This is an implementation of a sample ecommerce app. This microservices-based retail marketplace or eCommerce app is composed of **microservices written in Spring (Java)**, a **UI based on React** and **YugaByte DB as the distributed SQL database**.
+This is an implementation of a sample ecommerce app. This microservices-based retail marketplace or eCommerce app is composed of **microservices written in Spring (Java)**, a **UI based on React** and **YugabyteDB as the distributed SQL database**.
 
 If you're using this demo app, please :star: this repository! We appreciate your support.
 
@@ -25,7 +25,7 @@ The architecture diagram of YugaStore is shown below.
 ![Architecture of microservices based retail marketplace app](yugastore-java-architecture.png)
 
 
-| Microservice         | YugaByte DB API | Default host:port | Description           |
+| Microservice         | YugabyteDB API | Default host:port | Description           |
 | -------------------- | ---------------- | ---------------- | --------------------- |
 | [service discovery](https://github.com/YugaByte/yugastore-java/tree/master/eureka-server-local) | - | [localhost:8761](http://localhost:8761) | Uses **Eureka** for localhost. All microservices register with the Eureka service. This registration information is used to discover dynamic properties of any microservice. Examples of discovery include finding the hostnames or ip addresses, the load balancer and the port on which the microservice is currently running.
 | [react-ui](https://github.com/YugaByte/yugastore-java/tree/master/react-ui) | - | [localhost:8080](http://localhost:8080) | A react-based UI for the eCommerce online marketplace app.
