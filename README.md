@@ -43,9 +43,9 @@ To build, simply run the following from the base directory:
 $ mvn -DskipTests package
 ```
 
-To run the app, you need to first install YugaByte DB, create the necessary tables, start each of the microservices and finally the React UI.
+To run the app on host machine, you need to first install YugaByte DB, create the necessary tables, start each of the microservices and finally the React UI.
 
-## Running the app
+## Running the app on host
 
 Make sure you have built the app as described above. Now do the following steps.
 
@@ -126,4 +126,15 @@ $ mvn spring-boot:run
 ```
 
 Now browse to the marketplace app at [http://localhost:8080/](http://localhost:8080/).
+
+# Running the app in docker containers
+
+The dockers images are built along with the binaries when `mvn -DskipTests package` was run.
+To run the docker containers, run the following script, after you have [Installed and initialized YugabyteDB](#step-1-install-and-initialize-yugabyte-db):
+
+```
+$ ./docker-run.sh
+```
+Check all the services are registered on the [eureka-server](https://127.0.0.1/8761/).
+Once all services are registered, you can browse the marketplace app at [http://localhost:8080/](http://localhost:8080/).
 
