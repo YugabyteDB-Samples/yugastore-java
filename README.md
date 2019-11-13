@@ -1,4 +1,4 @@
-# YugaStore in Java
+# Yugastore in Java
 
 This is an implementation of a sample ecommerce app. This microservices-based retail marketplace or eCommerce app is composed of **microservices written in Spring (Java)**, a **UI based on React** and **YugabyteDB as the distributed SQL database**.
 
@@ -20,7 +20,7 @@ You can also [try the app out](https://yugastore-ui.cfapps.io/) online, it is ho
 
 ## Architecture
 
-The architecture diagram of YugaStore is shown below.
+The architecture diagram of Yugastore is shown below.
 
 ![Architecture of microservices based retail marketplace app](yugastore-java-architecture.png)
 
