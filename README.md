@@ -135,6 +135,6 @@ To run the docker containers, run the following script, after you have [Installe
 ```
 $ ./docker-run.sh
 ```
-Check all the services are registered on the [eureka-server](https://127.0.0.1/8761/).
+Check all the services are registered on the [eureka-server](http://127.0.0.1:8761/).
 Once all services are registered, you can browse the marketplace app at [http://localhost:8080/](http://localhost:8080/).
 
