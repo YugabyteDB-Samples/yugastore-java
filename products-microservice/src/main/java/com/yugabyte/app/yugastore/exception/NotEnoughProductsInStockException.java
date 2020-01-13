@@ -1,11 +1,15 @@
 package com.yugabyte.app.yugastore.exception;
 
-import com.yugabyte.app.yugastore.domain.ProductMetadata;
 import com.yugabyte.app.yugastore.domain.ProductInventory;
+import com.yugabyte.app.yugastore.domain.ProductMetadata;
 
 public class NotEnoughProductsInStockException extends Exception {
 
-    private static final String DEFAULT_MESSAGE = "Not enough products in stock";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String DEFAULT_MESSAGE = "Not enough products in stock";
 
     public NotEnoughProductsInStockException() {
         super(DEFAULT_MESSAGE);

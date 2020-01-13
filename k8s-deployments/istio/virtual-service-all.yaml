@@ -1,0 +1,52 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cart-microservice
+spec:
+  hosts:
+  - cart-microservice
+  http:
+  - route:
+    - destination:
+        host: cart-microservice
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: products-microservice
+spec:
+  hosts:
+  - products-microservice
+  http:
+  - route:
+    - destination:
+        host: products-microservice
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: checkout-microservice
+spec:
+  hosts:
+  - checkout-microservice
+  http:
+  - route:
+    - destination:
+        host: checkout-microservice
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: api-gateway
+spec:
+  hosts:
+  - api-gateway
+  http:
+  - route:
+    - destination:
+        host: api-gateway
+        subset: v1
+---

@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: cart-microservice-test-v2
+spec:
+  hosts:
+    - cart-microservice
+  http:
+  - route:
+    - destination:
+        host: cart-microservice
+        subset: v1
+      weight: 50
+    - destination:
+        host: cart-microservice
+        subset: v2
+      weight: 50

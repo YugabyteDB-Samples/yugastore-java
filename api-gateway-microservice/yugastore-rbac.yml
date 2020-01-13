@@ -2,13 +2,13 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: default-rbac
+  name: yugastore-rbac
 subjects:
   - kind: ServiceAccount
     # Reference to upper's `metadata.name`
     name: default
     # Reference to upper's `metadata.namespace`
-    namespace: yb-dev-yugastore-yb-cluster
+    namespace: default
 roleRef:
   kind: ClusterRole
   name: cluster-admin

@@ -4,19 +4,25 @@ metadata:
   name: checkout-microservice
   labels:
     app: checkout
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: checkout
+      version: v1
   template:
     metadata:
       labels:
         app: checkout
+        version: v1
     spec:
       containers:
       - name: checkout
         image: nchandrappa/checkout-microservice:latest
+        envFrom:
+        - configMapRef:
+            name: checkout-microservice-properties
         ports:
         - containerPort: 8080
 ---

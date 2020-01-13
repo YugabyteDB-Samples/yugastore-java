@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>com.yugabyte</groupId>
 			<artifactId>ysql</artifactId>
-			<version>42.2.7-yb-1-SNAPSHOT</version>
+			<version>42.2.7-yb-2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

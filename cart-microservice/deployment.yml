@@ -1,33 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cart-microservice
+  name: cart-microservice-v2
   labels:
     app: cart
+    version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: cart
+      version: v2
   template:
     metadata:
       labels:
         app: cart
+        version: v2
     spec:
       containers:
       - name: cart
         image: nchandrappa/cart-microservice:latest
+        envFrom:
+        - configMapRef:
+            name: cart-microservice-properties
         ports:
-        - containerPort: 8083
+        - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cart-service
+  name: cart-microservice
 spec:
   selector:
     app: cart
   ports:
     - protocol: TCP
       port: 8080
-      targetPort: 8083
+      targetPort: 8080

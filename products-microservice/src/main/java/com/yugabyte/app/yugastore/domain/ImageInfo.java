@@ -3,9 +3,9 @@ package com.yugabyte.app.yugastore.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
-public class ImageInfo extends ResourceSupport {
+public class ImageInfo extends RepresentationModel<ImageInfo> {
 
 	List<String> alsoBought;
 	List<String> alsoViewed;

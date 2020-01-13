@@ -2,11 +2,11 @@ package com.yugabyte.app.yugastore.domain;
 
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
-import org.springframework.hateoas.ResourceSupport;
 
 import com.datastax.driver.core.DataType.Name;
 
@@ -17,7 +17,6 @@ public class ProductMetadata{
 	
     @PrimaryKey(value="asin")
     private String id;
-  //String asin;
     
 	String brand;
 	

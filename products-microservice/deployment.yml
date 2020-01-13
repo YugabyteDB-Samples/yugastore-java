@@ -4,30 +4,36 @@ metadata:
   name: products-microservice
   labels:
     app: products
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: products
+      version: v1
   template:
     metadata:
       labels:
         app: products
+        version: v1
     spec:
       containers:
       - name: products
         image: nchandrappa/products-microservice:latest
+        envFrom:
+        - configMapRef:
+            name: products-microservice-properties
         ports:
-        - containerPort: 8082
+        - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: products-service
+  name: products-microservice
 spec:
   selector:
     app: products
   ports:
     - protocol: TCP
       port: 8080
-      targetPort: 8082
+      targetPort: 8080
