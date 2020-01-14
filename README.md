@@ -22,44 +22,81 @@ You can also [try the app out](https://yugastore-ui.cfapps.io/) online, it is ho
 
 The architecture diagram of YugaStore is shown below.
 
-![Architecture of microservices based retail marketplace app](yugastore-java-architecture.png)
+![Architecture of microservices based retail marketplace app](yugastore-java-k8s-architecture.png)
 
 
-| Microservice         | YugaByte DB API | Default host:port | Description           |
-| -------------------- | ---------------- | ---------------- | --------------------- |
-| [service discovery](https://github.com/YugaByte/yugastore-java/tree/master/eureka-server-local) | - | [localhost:8761](http://localhost:8761) | Uses **Eureka** for localhost. All microservices register with the Eureka service. This registration information is used to discover dynamic properties of any microservice. Examples of discovery include finding the hostnames or ip addresses, the load balancer and the port on which the microservice is currently running.
-| [react-ui](https://github.com/YugaByte/yugastore-java/tree/master/react-ui) | - | [localhost:8080](http://localhost:8080) | A react-based UI for the eCommerce online marketplace app.
-| [api-gateway](https://github.com/YugaByte/yugastore-java/tree/master/api-gateway-microservice) | - | [localhost:8081](http://localhost:8081) | This microservice handles all the external API requests. The UI only communicates with this microservice.
-| [products](https://github.com/YugaByte/yugastore-java/tree/master/products-microservice) | YCQL | [localhost:8082](http://localhost:8082) | This microservice contains the entire product catalog. It can list products by categories, return the most popular products as measured by sales rank, etc.
-| [cart](https://github.com/YugaByte/yugastore-java/tree/master/cart-microservice) | YCQL | [localhost:8083](http://localhost:8083) | This microservice deals with users adding items to the shopping cart. It has to be necessarily highly available, low latency and often multi-region.
-| [checkout](https://github.com/YugaByte/yugastore-java/tree/master/checkout-microservice) | YSQL | [localhost:8086](http://localhost:8086) | This deals with the checkout process and the placed order. It also manages the inventory of all the products because it needs to ensure the product the user is about to order is still in stock.
-| [login](https://github.com/YugaByte/yugastore-java/tree/master/login-microservice) | YSQL | [localhost:8085](http://localhost:8085) | Handles login and authentication of the users. *Note that this is still a work in progress.*
+| Microservice         | YugaByte DB API | Description           |
+| -------------------- | --------------- | --------------------- |
+| [react-ui](https://github.com/YugaByte/yugastore-java/tree/master/react-ui) | - | A react-based UI for the eCommerce online marketplace app.
+| [api-gateway](https://github.com/YugaByte/yugastore-java/tree/master/api-gateway-microservice) | - | This microservice handles all the external API requests. The UI only communicates with this microservice.
+| [products](https://github.com/YugaByte/yugastore-java/tree/master/products-microservice) | YCQL | This microservice contains the entire product catalog. It can list products by categories, return the most popular products as measured by sales rank, etc.
+| [cart](https://github.com/YugaByte/yugastore-java/tree/master/cart-microservice) | YCQL | This microservice deals with users adding items to the shopping cart. It has to be necessarily highly available, low latency and often multi-region.
+| [checkout](https://github.com/YugaByte/yugastore-java/tree/master/checkout-microservice) | YSQL | This deals with the checkout process and the placed order. It also manages the inventory of all the products because it needs to ensure the product the user is about to order is still in stock.
+| [login](https://github.com/YugaByte/yugastore-java/tree/master/login-microservice) | YSQL | Handles login and authentication of the users. *Note that this is still a work in progress.*
 
 # Build and run
 
+## Build Jars with Maven 
 To build, simply run the following from the base directory:
 
 ```
 $ mvn -DskipTests package
 ```
 
-To run the app, you need to first install YugaByte DB, create the necessary tables, start each of the microservices and finally the React UI.
 
-## Running the app
+## Build a Docker Image with Maven
 
-Make sure you have built the app as described above. Now do the following steps.
+To get started quickly, you can run Jib without even changing your pom.xml:
+
+```
+$ ./mvnw com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=nchandrappa/cart-microservice
+```
+
+To push to a Docker registry you use the build goal, instead of dockerBuild, i.e.
+
+```
+$ ./mvnw com.google.cloud.tools:jib-maven-plugin:build -Dimage=nchandrappa/cart-microservice
+```
+
+To run the app on your local Minikube, you need to first install YugaByte DB, create the necessary tables, start each of the microservices and finally the React UI.
+
+## Running the app on Minikube
+
+Make sure you have built the docker images as described above and you're in the yugastore-java base directory. Now do the following steps.
+
+
+## verify if minikube in running
+
+```
+$ minikube status
+```
 
 ## Step 1: Install and initialize YugaByte DB
 
 You can [install YugaByte DB by following these instructions](https://docs.yugabyte.com/latest/quick-start/).
 
-Now create the necessary tables as shown below. Note that these steps would take a few seconds.
+=> Install YugabyteDB in minikube
+
+```
+$ kubectl create -f k8s-deployments/util/default-rbac.yml
+$ kubectl create namespace yb-demo
+$ kubectl create -f k8s-deployments/Yugabyte/yugabyte-statefulset-rf-1.yaml -n yb-demo
+
+```
+
+==> Verify YugabyteDB installation by connecting to postgres terminal using the following command
+
+```
+$ kubectl -n yb-demo exec -it yb-tserver-0 /home/yugabyte/bin/ysqlsh -- -h yb-tserver-0  --echo-queries
+```
+
+Now create the necessary tables as shown below. Load sample dataset by following the steps here: (resources/README.md)
 
 ```
 $ cd resources
 $ cqlsh -f schema.cql
 ```
-Next, load some sample data.
+Next, load some sample data. Follow the data load steps in 
 
 ```
 $ cd resources
@@ -68,62 +105,20 @@ $ ./dataload.sh
 
 Create the postgres tables in `resources/schema.sql` for the YSQL tables.
 
-## Step 2: Start the Eureka service discovery (local)
-
-You can do this as follows:
+## Step 2: Deploy yugastore-java microservices
 
 ```
-$ cd eureka-server-local/
-$ mvn spring-boot:run
-```
-
-Verify this is running by browsing to the [Spring Eureka Service Discovery dashboard](http://localhost:8761/).
-
-## Step 2: Start the api gateway microservice
-
-To run the products microservice, do the following in a separate shell:
-
-```
-$ cd api-gateway-microservice/
-$ mvn spring-boot:run
+$ kubectl create -f k8s-deployments/microservices/yugastore-deployment.yaml
 ```
 
 
-## Step 3: Start the products microservice
-
-To run the products microservice, do the following in a separate shell:
-
-```
-$ cd products-microservice/
-$ mvn spring-boot:run
-```
-
-## Step 4: Start the checkout microservice
-
-To run the products microservice, do the following in a separate shell:
-
-```
-$ cd checkout-microservice/
-$ mvn spring-boot:run
-```
-
-## Step 5: Start the checkout microservice
-
-To run the cart microservice, do the following in a separate shell:
-
-```
-$ cd cart-microservice/
-$ mvn spring-boot:run
-```
-
-## Step 6: Start the UI
+## Step 3: browse to the marketplace app
 
 To do this, simply run `npm start` from the `frontend` directory in a separate shell:
 
 ```
-$ cd react-ui
-$ mvn spring-boot:run
+$ minikube service yugastore-ui
 ```
 
-Now browse to the marketplace app at [http://localhost:8080/](http://localhost:8080/).
+this command will open up Yugastore Dashboard.
 
