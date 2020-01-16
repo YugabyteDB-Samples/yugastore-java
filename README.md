@@ -60,9 +60,10 @@ $ ./mvnw com.google.cloud.tools:jib-maven-plugin:build -Dimage=nchandrappa/cart-
 
 Note: Update docker image id to reflect the docker repository of your choice.
 
-To run the app on your local Minikube, you need to first install YugaByte DB, create the necessary tables, start each of the microservices and finally the React UI.
 
 ## Running the app on Minikube
+
+To run the app on your local Minikube, you need to first install YugaByte DB, create the necessary tables, deploy microservices and the React UI. 
 
 Make sure you have built the docker images as described above and you're in the `yugastore-java` base directory. Now do the following steps.
 
@@ -107,7 +108,7 @@ $ export YSQLSH_HOST=192.168.64.3
 $ export YSQLSH_PORT=32517
 ```
 
-d. Now create the necessary tables as shown below. Load sample dataset by following the steps here: (resources/README.md)
+d. Now create the necessary tables as shown below. Load sample dataset by following the steps [here](resources/README.md)
 
 ```
 $ cd resources
@@ -145,7 +146,7 @@ this command will open up Yugastore Dashboard.
 
 # Next Steps
 
-- [Deploy Yugastore on Istio enabled Kubernetes Cluster] (/resources/k8s-deployoment-instructions.md)
+- [Deploy Yugastore on Istio enabled Kubernetes Cluster](k8s-deployoment-instructions.md)
 
 
 # Learn more
