@@ -1,6 +1,6 @@
 # YugaStore in Java
 
-This is an implementation of a sample ecommerce app. This microservices-based retail marketplace or eCommerce app is composed of **microservices written in Spring (Java)**, a **UI based on React** and **YugaByte DB as the distributed SQL database**.
+This is an implementation of a sample ecommerce app. This microservices-based retail marketplace or eCommerce app is composed of **microservices written in Spring (Java)**, a **UI based on React** and **YugaByte DB as the distributed SQL database**. 
 
 If you're using this demo app, please :star: this repository! We appreciate your support.
 
@@ -58,11 +58,13 @@ To push to a Docker registry you use the build goal, instead of dockerBuild, i.e
 $ ./mvnw com.google.cloud.tools:jib-maven-plugin:build -Dimage=nchandrappa/cart-microservice
 ```
 
+Note: Update docker image id to reflect the docker repository of your choice.
+
 To run the app on your local Minikube, you need to first install YugaByte DB, create the necessary tables, start each of the microservices and finally the React UI.
 
 ## Running the app on Minikube
 
-Make sure you have built the docker images as described above and you're in the yugastore-java base directory. Now do the following steps.
+Make sure you have built the docker images as described above and you're in the `yugastore-java` base directory. Now do the following steps.
 
 
 ## verify if minikube in running
@@ -75,7 +77,7 @@ $ minikube status
 
 You can [install YugaByte DB by following these instructions](https://docs.yugabyte.com/latest/quick-start/).
 
-=> Install YugabyteDB in minikube
+a. Install YugabyteDB in minikube
 
 ```
 $ kubectl create -f k8s-deployments/util/default-rbac.yml
@@ -84,18 +86,34 @@ $ kubectl create -f k8s-deployments/Yugabyte/yugabyte-statefulset-rf-1.yaml -n y
 
 ```
 
-==> Verify YugabyteDB installation by connecting to postgres terminal using the following command
+b. Verify YugabyteDB installation by connecting to postgres terminal using the following command
 
 ```
 $ kubectl -n yb-demo exec -it yb-tserver-0 /home/yugabyte/bin/ysqlsh -- -h yb-tserver-0  --echo-queries
 ```
 
-Now create the necessary tables as shown below. Load sample dataset by following the steps here: (resources/README.md)
+c. find the YCQL and YSQL ip-address:port for YugabyteDB cluster by running the below command 
+
+```
+$ minikube service yb-db-service -n yb-demo
+```
+
+set the following environment variables from above data.  example: 
+
+```
+$ export CQLSH_HOST=192.168.64.3
+$ export CQLSH_PORT=31620
+$ export YSQLSH_HOST=192.168.64.3
+$ export YSQLSH_PORT=32517
+```
+
+d. Now create the necessary tables as shown below. Load sample dataset by following the steps here: (resources/README.md)
 
 ```
 $ cd resources
 $ cqlsh -f schema.cql
 ```
+
 Next, load some sample data. Follow the data load steps in 
 
 ```
@@ -103,7 +121,11 @@ $ cd resources
 $ ./dataload.sh
 ```
 
-Create the postgres tables in `resources/schema.sql` for the YSQL tables.
+Create the postgres tables in `resources/schema.sql` for the YSQL tables
+
+```
+$ ysqlsh -h $YSQLSH_HOST -p $YSQLSH_PORT -d postgres -f schema.sql
+```
 
 ## Step 2: Deploy yugastore-java microservices
 
@@ -114,11 +136,20 @@ $ kubectl create -f k8s-deployments/microservices/yugastore-deployment.yaml
 
 ## Step 3: browse to the marketplace app
 
-To do this, simply run `npm start` from the `frontend` directory in a separate shell:
-
 ```
 $ minikube service yugastore-ui
 ```
 
 this command will open up Yugastore Dashboard.
 
+
+# Next Steps
+
+- [Deploy Yugastore on Istio enabled Kubernetes Cluster] (/resources/k8s-deployoment-instructions.md)
+
+
+# Learn more
+
+- [Learn YugabyteDB](https://learn.yugabyte.com/)
+- [Contribute to YugabyteDB](https://www.yugabyte.com/community/)
+- [Contribute to Spring Data YugabyteDB](https://github.com/yugabyte/spring-data-yugabytedb)
