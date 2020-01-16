@@ -128,4 +128,20 @@ $ kubectl apply -f k8s-deployments
 $ kubectl get service istio-ingressgateway -n istio-system
 ```
 
+# Traffic Management with Istio - Day 2 operations
+
+We have two versions of cart-microservice, one which uses standard postgres jdbc driver and v2 of the same microservice that uses YugabyteDB cluster aware JDBC driver. We are going to use these two microservices to demonstrate set of day 2 tasks that are commonly used in in microservices deployments like, canary testing, A/B testing, chaos testing.. to name a few.
+
+
+## Canary testing of cart microservice
+
+Canary releases are used to reduce the risk of deploying a new version of microservice into production. You start by routing only a few selected users or small percentage of traffic on to newer version of the microservice. In this task, you'll configure a virtualservice to route 95% of traffic to cart-microservice:v1 and 5% of traffic to cart-microservice:v2.
+
+```
+$ kubectl apply -f k8s-deployments/istio/cart-microservice-canary-testing.yaml
+```
+
+## A/B Testing of cart microservice
+
+A/B testing is used to for testing the new features that are going to prod, like its usability, popularity, noticeability etc. In this task, you will configure a virtualservice to route 50% of traffic onto cart-microservice:v1 and other 50% of traffic to cart-microservice:v1
 
