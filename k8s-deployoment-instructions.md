@@ -145,3 +145,6 @@ $ kubectl apply -f k8s-deployments/istio/cart-microservice-canary-testing.yaml
 
 A/B testing is used to for testing the new features that are going to prod, like its usability, popularity, noticeability etc. In this task, you will configure a virtualservice to route 50% of traffic onto cart-microservice:v1 and other 50% of traffic to cart-microservice:v1
 
+```
+$ kubectl apply -f cart-microservice-ab-testing.yaml
+```
