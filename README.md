@@ -68,7 +68,7 @@ To run the app on your local Minikube, you need to first install YugaByte DB, cr
 Make sure you have built the docker images as described above and you're in the `yugastore-java` base directory. Now do the following steps.
 
 
-## verify if minikube in running
+## verify if minikube is running
 
 ```
 $ minikube status
