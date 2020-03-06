@@ -48,7 +48,7 @@ Install Istio on your kubernetes cluster using `demo` profile so that monitoring
 
 You can [install YugaByte DB by following these instructions](https://docs.yugabyte.com/latest/quick-start/).
 
-a. Install YugabyteDB in minikube
+a. Install YugabyteDB on Kubernetes
 
 ```
 $ kubectl create -f k8s-deployments/util/default-rbac.yml
@@ -119,8 +119,9 @@ $ kubectl apply -f k8s-deployments/microservices/yugastore-deployment.yaml
 ## Deploy istio ingress gateway for Yugastore-UI microservice
 
 ```
-$ kubectl apply -f k8s-deployments 
+$ kubectl apply -f k8s-deployments/istio/yugastore-gateway.yaml
 ```
+This will expose the Yugastore-UI ingress to internet through Istio edge gateway.
 
 ## Find the Istio gateway external-ip address and navigate to Yugastore-UI
 
