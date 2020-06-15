@@ -5,14 +5,14 @@ Run the following to parse the metadata JSON file into CSV format that the loade
 $ python parse_metadata_json.py metadata_strict_small.json
 ```
 
-The above should result in following two files that can be loaded into YugaByte DB subsequently:
+The above should result in following two files that can be loaded into YugabyteDB subsequently:
 * `cronos_products.csv`
 * `cronos_product_rankings.csv`
 
 
 ## Loading data
 
-You need [the Cassandra loader for YugaByte DB](https://github.com/YugaByte/cassandra-loader/) in
+You need [the Cassandra loader for YugabyteDB](https://github.com/YugaByte/cassandra-loader/) in
 order to load the data. You can fetch the Cassandra loader by running the following:
 ```
 $ wget https://github.com/YugaByte/cassandra-loader/releases/download/v0.0.27-yb-1/cassandra-loader
@@ -21,7 +21,7 @@ $ chmod +x cassandra-loader
 
 ### Load `cronos_products.csv`
 
-Load the data in `cronos_products.csv` into YugaByte DB by running the following command:
+Load the data in `cronos_products.csv` into YugabyteDB by running the following command:
 ```
 $ cassandra-loader -f cronos_products.csv -host localhost -schema \
     "cronos.products(asin, title, price, imUrl, also_bought, also_viewed, bought_together, brand, categories)"
@@ -36,7 +36,7 @@ Lines Processed: 	9  Rate: 	0.0
 
 ### Load `cronos_product_rankings.csv`
 
-Load the data in `cronos_product_rankings.csv` into YugaByte DB by running the following command:
+Load the data in `cronos_product_rankings.csv` into YugabyteDB by running the following command:
 ```
 $ cassandra-loader -f cronos_product_rankings.csv -host localhost -schema \
     "cronos.product_rankings(asin, category, sales_rank)"
