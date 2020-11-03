@@ -12,9 +12,9 @@ You can also [try the app out](https://yugastore-ui.cfapps.io/) online, it is ho
 
 # Features
 
-* Written fully in Spring
+* Written fully in Spring Framework
 * Desgined for multi-region and Kubernetes-native deployments
-* Features 6 microservices
+* Features 6 Spring Boot microservices
 * Uses a discovery service that the microservices register with
 * Sample data has over 6K products in the store
 
