@@ -138,3 +138,11 @@ $ ./docker-run.sh
 Check all the services are registered on the [eureka-server](http://127.0.0.1:8761/).
 Once all services are registered, you can browse the marketplace app at [http://localhost:8080/](http://localhost:8080/).
 
+# Running the app via docker-compose
+
+if you dont want to build the docker images and and just want to run the app use the docker compose and just the command below
+
+```
+$ docker-compose up -d
+```
+
