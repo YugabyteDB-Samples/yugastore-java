@@ -1,12 +1,5 @@
 version: "3"
 
-#network_mode: host
-#  yugastore:
-#    ipam:
-#      config:
-#        - subnet: 192.168.100.0/24
-#          gateway: 192.168.100.1
-
 services:
   eureka:
     image: maven:3.6.3-openjdk-16
