@@ -1,0 +1,75 @@
+version: "3"
+
+#network_mode: host
+#  yugastore:
+#    ipam:
+#      config:
+#        - subnet: 192.168.100.0/24
+#          gateway: 192.168.100.1
+
+services:
+  eureka:
+    image: maven:3.6.3-openjdk-16
+    volumes: 
+      - ./eureka-server-local:/app/
+      - /etc/localtime:/etc/localtime:ro
+    network_mode: host
+    command: mvn spring-boot:run
+    working_dir: /app
+    
+  apigateway:
+    image: maven:3.6.3-openjdk-16
+    volumes:
+      - ./api-gateway-microservice/:/app
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /app
+    command: mvn spring-boot:run
+    network_mode: host
+    
+  product:
+    image: maven:3.6.3-openjdk-16
+    command: mvn spring-boot:run
+    volumes:
+      - ./products-microservice/:/app
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /app
+    network_mode: host 
+    
+  checkout:
+    image: maven:3.6.3-openjdk-16
+    command: mvn spring-boot:run
+    volumes:
+      - ./checkout-microservice/:/app
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /app
+    network_mode: host
+
+  cart:
+    image: maven:3.6.3-openjdk-16
+    command: mvn spring-boot:run
+    volumes:
+      - ./cart-microservice/:/app
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /app
+    network_mode: host
+
+  react:
+    image: maven:3.6.3-openjdk-16
+    command: mvn spring-boot:run
+    volumes:
+      - ./react-ui/:/app
+      - /etc/localtime:/etc/localtime:ro
+    working_dir: /app 
+    network_mode: host
+
+  db:
+    image: yugabytedb/yugabyte:latest
+    command: bin/yugabyted start --daemon=false
+    volumes:
+      - ./resources/:/db/
+    network_mode: host
+    ports:
+      - 7000:7000
+      - 9000:9000
+      - 5433:5433
+      - 9042:9042
