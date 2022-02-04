@@ -10,6 +10,14 @@ This repo contains all the instructions you need to [run the app on your laptop]
 
 You can also [try the app out](https://yugastore-ui.cfapps.io/) online, it is hosted on [Pivotal Web Services](https://run.pivotal.io/).
 
+# Versions
+
+* Java 17
+* Spring Boot 2.6.3
+* Spring Cloud 2021.0.0
+* Yugabyte Java Driver 4.6.0-yb-10
+* Python 3 (Data Loading)
+
 # Features
 
 * Written fully in Spring Framework
