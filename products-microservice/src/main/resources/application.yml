@@ -1,5 +1,23 @@
-logging.level.org.springframework.web=INFO
-cronos.yugabyte.keyspace=cronos
-cronos.yugabyte.hostname=127.0.0.1
-cronos.yugabyte.port=9042
-spring.profiles.active=local
+spring:
+  profiles:
+    active: local
+  application:
+    name: products-microservice
+
+server:
+  port: 8082
+
+logging:
+  level:
+    root: info
+    org.springframework.wen: info
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+    org.hibernate.type.descriptor.BasicBinder: trace
+
+
+cronos:
+  yugabyte:
+    keyspace: cronos
+    hostname: 127.0.0.1
+    port: 9042

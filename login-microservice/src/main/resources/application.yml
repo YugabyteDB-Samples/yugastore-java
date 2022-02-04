@@ -1,18 +1,37 @@
-#spring.jpa.hibernate.ddl-auto=create
-spring.jpa.show-sql=true
+spring:
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/postgres
+    username: postgres
+    password: ""
+  messages:
+    basename: validation
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
 
-spring.mvc.view.prefix: /
-spring.mvc.view.suffix: .jsp
-spring.messages.basename=validation
+yugastore:
+  redirect:
+    url: https://yugastore-ui.cfapps.io
 
-spring.jpa.database=POSTGRESQL
-spring.data.jpa.repositories.enabled=true
-spring.datasource.url=jdbc:postgresql://127.0.0.1:5433/postgres
-spring.datasource.username=postgres
-spring.datasource.password=
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-logging.level.org.hibernate.SQL=DEBUG
-logging.level.org.hibernate.type=trace
-logging.level.org.hibernate.type.descriptor.BasicBinder=TRACE
-yugastore.redirect.url=https://yugastore-ui.cfapps.io
-server.port=8085
+server:
+  port: 8085
+
+logging:
+  level:
+    root: info
+#    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
+#    org.hibernate.type.descriptor.BasicBinder: trace
+

@@ -6,9 +6,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-public class YugabyteClientApplication {
+public class YugastoreApiGateway {
 
 	public static void main(String[] args) {
-		SpringApplication.run(YugabyteClientApplication.class, args);
+		SpringApplication.run(YugastoreApiGateway.class, args);
 	}
 }

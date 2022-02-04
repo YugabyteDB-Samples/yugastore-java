@@ -3,51 +3,52 @@ package com.yugabyte.app.yugastore.domain;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.CassandraType.Name;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
-import com.datastax.driver.core.DataType.Name;
+
 
 
 @Table(value = "products")
 public class ProductMetadata{
 
-	
+
     @PrimaryKey(value="asin")
     private String id;
   //String asin;
-    
+
 	String brand;
-	
+
 	Set<String> categories;
-	
+
 	@Column(value = "imurl")
 	String imUrl;
-	
+
 	Double price;
-	
+
 	String title;
-	
+
 	String description;
-	
+
 	@CassandraType(type = Name.LIST)
 	List<String> also_bought;
-	
+
 	@CassandraType(type = Name.LIST)
 	List<String> also_viewed;
-	
+
 	@CassandraType(type = Name.LIST)
 	List<String> bought_together;
-	
+
 	@CassandraType(type = Name.LIST)
 	List<String> buy_after_viewing;
-	
+
 	Integer num_reviews;
-	
+
 	Double num_stars;
-	
+
 	Double avg_stars;
 
 	public String getId() {
@@ -134,7 +135,7 @@ public class ProductMetadata{
 	public void setBuy_after_viewing(List<String> buy_after_viewing) {
 		this.buy_after_viewing = buy_after_viewing;
 	}
-	
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

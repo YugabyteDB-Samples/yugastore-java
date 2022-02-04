@@ -9,9 +9,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 
 @EnableDiscoveryClient
-public class YugastoreProductApplication {
+public class YugastoreProducts {
 
 	public static void main(String[] args) {
-		SpringApplication.run(YugastoreProductApplication.class, args);
+		SpringApplication.run(YugastoreProducts.class, args);
 	}
 }

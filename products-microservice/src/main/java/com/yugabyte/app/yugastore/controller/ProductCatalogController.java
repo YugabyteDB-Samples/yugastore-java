@@ -18,7 +18,7 @@ import com.yugabyte.app.yugastore.service.ProductRankingService;
 @RestController
 @RequestMapping(value = "/products-microservice")
 public class ProductCatalogController {
-  
+
   // This service is used to lookup metadata of products by their id.
   @Autowired
   ProductService productService;
@@ -26,22 +26,23 @@ public class ProductCatalogController {
   // This service is used to lookup the top products by sales rank in a category.
   @Autowired
   ProductRankingService productRankingService;
-  
+
   @RequestMapping(method = RequestMethod.GET, value = "/product/{asin}", produces = "application/json")
   public ProductMetadata getProductDetails(@PathVariable String asin) {
     ProductMetadata productMetadata = productService.findById(asin).get();
     return productMetadata;
-  }  
+  }
 
   @RequestMapping(method = RequestMethod.GET, value = "/products", produces = "application/json")
-  public List<ProductMetadata> getProducts(@Param("limit") int limit, @Param("offset") int offset) {
+  public List<ProductMetadata> getProducts(@Param("limit") int limit,
+    @Param("offset") int offset) {
     return productService.findAllProductsPageable(limit, offset);
-  }  
+  }
 
   @RequestMapping(method = RequestMethod.GET, value = "/products/category/{category}", produces = "application/json")
   public List<ProductRanking> getProductsByCategory(@PathVariable String category,
                                                     @Param("limit") int limit,
                                                     @Param("offset") int offset) {
     return productRankingService.getProductsByCategory(category, limit, offset);
-  }  
+  }
 }

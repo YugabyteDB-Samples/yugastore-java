@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 @SpringBootTest
-public class EurekaServerLocalApplicationTests {
+public class YugastoreEurekaServerTests {
 
 	@Test
 	public void contextLoads() {

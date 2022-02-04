@@ -4,7 +4,7 @@ import random, math
 
 def safe_encode(str):
     str1 = str.replace('\\', "\\\\")
-    return ('"' + str1.replace('"', '\\"').replace("\n"," ").strip() + '"')
+    return ('"' + str1.replace('"', '\\"').replace("\n"," ").strip().decode('utf-8', 'ignore') + '"')
 
 def collection_to_str(items, start_sep, end_sep):
     if len(items) == 0:
@@ -78,7 +78,7 @@ def parse_and_write_metadata(product, f_products, f_rankings, f_inventory):
         f_inventory.write(str(random.randint(100, 1000)))
         f_inventory.write("\n")
         if ("salesRank" in product):
-            for category, rank in list(product["salesRank"].items()):
+            for category, rank in product["salesRank"].items():
                 f_rankings.write(product["asin"])
                 f_rankings.write(",")
                 f_rankings.write(safe_encode(category))
@@ -102,10 +102,10 @@ def parse_and_write_metadata(product, f_products, f_rankings, f_inventory):
 
 # The input data file.
 if len(sys.argv) < 2:
-    print("Error: Metadata file (one JSON product info per line) argument expected.")
+    print "Error: Metadata file (one JSON product info per line) argument expected."
     exit()
 metadata_file = str(sys.argv[1])
-print(("Processing file: %s " % metadata_file))
+print ("Processing file: %s " % metadata_file)
 
 # This is the file to which the product data is written.
 f_products = open('cronos_products.csv', 'w')

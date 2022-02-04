@@ -1,5 +1,6 @@
 package com.yugabyte.app.yugastore.cronoscheckoutapi.config;
 
+import com.datastax.oss.driver.api.core.CqlSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +11,7 @@ import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
-import com.datastax.driver.core.Session;
+
 
 @Configuration
 @EnableAutoConfiguration
@@ -18,7 +19,8 @@ import com.datastax.driver.core.Session;
 class YugabyteLocalConfig {
 
 	@Configuration
-	@EnableCassandraRepositories(basePackages = { "com.yugabyte.app.yugastore.repo" })
+	@EnableCassandraRepositories(basePackages = { "com.yugabyte.app.yugastore.cronoscheckoutapi"
+    + ".repositories"})
 	class CassandraConfig extends AbstractCassandraConfiguration {
 
 		@Value("${cronos.yugabyte.hostname:localhost}")
@@ -26,7 +28,7 @@ class YugabyteLocalConfig {
 
 		@Value("${cronos.yugabyte.port:9042}")
 		private int cassandraPort;
-		
+
 		@Value("${cronos.yugabyte.keyspace:cronos}")
 		private String keyspace;
 
@@ -51,7 +53,7 @@ class YugabyteLocalConfig {
 		}
 
 		@Bean
-		public CassandraTemplate cassandraTemplate(Session session) {
+		public CassandraTemplate cassandraTemplate(CqlSession session) {
 			return new CassandraTemplate(session);
 		}
 

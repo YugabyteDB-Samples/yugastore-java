@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM eclipse-temurin:17-jre
 COPY ./target/products-microservice-0.0.1-SNAPSHOT.jar /
 EXPOSE 8082
 ARG ipaddr

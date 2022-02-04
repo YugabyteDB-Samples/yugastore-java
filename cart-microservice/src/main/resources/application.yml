@@ -1,10 +1,24 @@
-spring.jpa.database=POSTGRESQL
-spring.data.jpa.repositories.enabled=true
-spring.datasource.url=jdbc:postgresql://127.0.0.1:5433/postgres
-spring.datasource.username=postgres
-spring.datasource.password=
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-logging.level.org.hibernate.SQL=DEBUG
-logging.level.org.hibernate.type=trace
-logging.level.org.hibernate.type.descriptor.BasicBinder=TRACE
-logging.level.=DEBUG
+server:
+  port: 8083
+spring:
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/postgres
+    username: postgres
+    password: ""
+logging:
+  level:
+    root: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+    org.hibernate.type.descriptor.BasicBinder: trace
