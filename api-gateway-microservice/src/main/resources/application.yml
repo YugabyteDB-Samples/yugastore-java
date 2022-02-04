@@ -1,2 +1,5 @@
+spring:
+  application:
+    name: api-gateway-microservice
 server:
   port: 8081

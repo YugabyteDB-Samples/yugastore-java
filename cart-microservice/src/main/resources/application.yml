@@ -1,6 +1,8 @@
 server:
   port: 8083
 spring:
+  application:
+    name: cart-microservice
   jpa:
     database: postgresql
     hibernate:

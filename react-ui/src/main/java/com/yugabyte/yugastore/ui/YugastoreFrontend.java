@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CronosUIApplication {
+public class YugastoreFrontend {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CronosUIApplication.class, args);
+		SpringApplication.run(YugastoreFrontend.class, args);
 	}
 }

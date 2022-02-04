@@ -7,6 +7,7 @@ cronos:
 spring:
   profiles:
     active: local
-
+  application:
+    name: checkout-microservice
 server:
   port: 8086

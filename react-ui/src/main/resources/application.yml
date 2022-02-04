@@ -1,0 +1,11 @@
+cronos:
+  yugabyte:
+    api: http://localhost:8081/api/v1/
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: info
+    org.springframework.web: info
