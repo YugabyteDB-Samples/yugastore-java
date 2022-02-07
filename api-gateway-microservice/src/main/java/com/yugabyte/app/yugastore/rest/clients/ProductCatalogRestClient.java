@@ -11,17 +11,17 @@ import com.yugabyte.app.yugastore.domain.ProductMetadata;
 import com.yugabyte.app.yugastore.domain.ProductRanking;
 
 @FeignClient("products-microservice")
-@RequestMapping("/products-microservice")
 public interface ProductCatalogRestClient {
-  
-  @RequestMapping("/product/{asin}")
-  ProductMetadata getProductDetails(@PathVariable("asin") String asin);
-  
-  @RequestMapping("/products")
-  List<ProductMetadata> getProducts(@RequestParam("limit") int limit, @RequestParam("offset") int offset);
 
-  @RequestMapping("/products/category/{category}")
+  @RequestMapping("/products-microservice/product/{asin}")
+  ProductMetadata getProductDetails(@PathVariable("asin") String asin);
+
+  @RequestMapping("/products-microservice/products")
+  List<ProductMetadata> getProducts(@RequestParam("limit") int limit,
+    @RequestParam("offset") int offset);
+
+  @RequestMapping("/products-microservice/products/category/{category}")
   List<ProductRanking> getProductsByCategory(@PathVariable("category") String category,
-                                              @RequestParam("limit") int limit,
-                                              @RequestParam("offset") int offset);
+    @RequestParam("limit") int limit,
+    @RequestParam("offset") int offset);
 }

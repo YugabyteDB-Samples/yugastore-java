@@ -1,7 +1,7 @@
 package com.yugabyte.app.yugastore.repo.rest;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import com.yugabyte.app.yugastore.domain.ProductMetadata;
 import com.yugabyte.app.yugastore.repo.ProductMetadataRepo;
 
 @RepositoryRestController
-@RequestMapping(value = "/products-microservice")
+//@RequestMapping(value = "/products-microservice")
 public class ProductMetadataRestRepo {
 
 	private final ProductMetadataRepo repository;

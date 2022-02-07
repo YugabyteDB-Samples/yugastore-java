@@ -1,5 +1,6 @@
 package com.yugabyte.app.yugastore.cronoscheckoutapi.config;
 
+import com.datastax.oss.driver.api.core.CqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -7,15 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
+import org.springframework.data.cassandra.config.CqlSessionFactoryBean;
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
-import com.datastax.driver.core.AuthProvider;
-import com.datastax.driver.core.HostDistance;
-import com.datastax.driver.core.PlainTextAuthProvider;
-import com.datastax.driver.core.PoolingOptions;
-import com.datastax.driver.core.Session;
+import com.datastax.oss.driver.api.core.CqlSession;
 
 @Configuration
 @EnableAutoConfiguration
@@ -23,7 +21,7 @@ import com.datastax.driver.core.Session;
 class CassandraCloudConfig {
 
 	@Configuration
-	@EnableCassandraRepositories(basePackages = { "com.yugabyte.app.yugastore.repo" })
+	@EnableCassandraRepositories(basePackages = { "com.yugabyte.app.yugastore.cronoscheckoutapi.repositories"})
 	class CassandraConfig extends AbstractCassandraConfiguration {
 
 		@Autowired
@@ -34,11 +32,11 @@ class CassandraCloudConfig {
 
 		@Value("${cronos.yugabyte.port:9042}")
 		private int cassandraPort;
-		
+
 		@Value("${cronos.yugabyte.username:cassandra}")
 		private String cassandraUsername;
 
-		
+
 		@Value("${cronos.yugabyte.password:cassandra}")
 		private String cassandraPassword;
 
@@ -58,11 +56,15 @@ class CassandraCloudConfig {
 		public int getPort() {
 			return cassandraPort;
 		}
-		
-		@Override
-		protected AuthProvider getAuthProvider() {
-			return new PlainTextAuthProvider(cassandraUsername, cassandraPassword);
-		}
+
+    @Bean
+    @Override
+    public CqlSessionFactoryBean cassandraSession() {
+      CqlSessionFactoryBean cassandraSession = super.cassandraSession();//super session should be called only once
+      cassandraSession.setUsername(cassandraUsername);
+      cassandraSession.setPassword(cassandraPassword);
+      return cassandraSession;
+    }
 //
 //		@Bean
 //		public CassandraCqlClusterFactoryBean cluster() {
@@ -73,16 +75,16 @@ class CassandraCloudConfig {
 //
 //			return cluster;
 //		}
-//		
-		@Override
-		public PoolingOptions getPoolingOptions() {
-			
-			PoolingOptions poolingOptions = new PoolingOptions()
-		    .setMaxRequestsPerConnection(HostDistance.LOCAL, 32768)
-		    .setMaxRequestsPerConnection(HostDistance.REMOTE, 2000);
-			
-			return poolingOptions;
-		}
+//
+//		@Override
+//		public PoolingOptions getPoolingOptions() {
+//
+//			PoolingOptions poolingOptions = new PoolingOptions()
+//		    .setMaxRequestsPerConnection(HostDistance.LOCAL, 32768)
+//		    .setMaxRequestsPerConnection(HostDistance.REMOTE, 2000);
+//
+//			return poolingOptions;
+//		}
 
 		@Override
 		public SchemaAction getSchemaAction() {
@@ -90,7 +92,7 @@ class CassandraCloudConfig {
 		}
 
 		@Bean
-		public CassandraTemplate cassandraTemplate(Session session) {
+		public CassandraTemplate cassandraTemplate(CqlSession session) {
 			return new CassandraTemplate(session);
 		}
 

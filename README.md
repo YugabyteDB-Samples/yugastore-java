@@ -1,5 +1,6 @@
 # Yugastore in Java
 
+![Homepage](docs/home.png)
 This is an implementation of a sample ecommerce app. This microservices-based retail marketplace or eCommerce app is composed of **microservices written in Spring (Java)**, a **UI based on React** and **YugabyteDB as the distributed SQL database**.
 
 If you're using this demo app, please :star: this repository! We appreciate your support.
@@ -9,6 +10,14 @@ If you're using this demo app, please :star: this repository! We appreciate your
 This repo contains all the instructions you need to [run the app on your laptop](#building-the-app).
 
 You can also [try the app out](https://yugastore-ui.cfapps.io/) online, it is hosted on [Pivotal Web Services](https://run.pivotal.io/).
+
+# Versions
+
+* Java 17
+* Spring Boot 2.6.3
+* Spring Cloud 2021.0.0
+* Yugabyte Java Driver 4.6.0-yb-10
+* Python 3 (Data Loading)
 
 # Features
 
@@ -138,3 +147,26 @@ $ ./docker-run.sh
 Check all the services are registered on the [eureka-server](http://127.0.0.1:8761/).
 Once all services are registered, you can browse the marketplace app at [http://localhost:8080/](http://localhost:8080/).
 
+
+
+## Screenshots
+
+
+### Home
+![Home Page](docs/home.png)
+
+### Product Category Page
+
+![Product Category](docs/product-category.png)
+
+### Product Detail Page
+
+![Product Page](docs/product.png)
+
+### Car
+
+![Cart](docs/cart.png)
+
+## Checkout
+
+![Checkout](docs/checkout.png)

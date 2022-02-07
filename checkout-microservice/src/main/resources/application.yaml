@@ -1,0 +1,13 @@
+cronos:
+  yugabyte:
+    keyspace: cronos
+    hostname: 127.0.0.1
+    port: 9042
+
+spring:
+  profiles:
+    active: local
+  application:
+    name: checkout-microservice
+server:
+  port: 8086

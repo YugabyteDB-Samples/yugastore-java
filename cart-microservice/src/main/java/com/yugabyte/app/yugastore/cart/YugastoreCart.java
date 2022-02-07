@@ -1,12 +1,13 @@
-package com.yugabyte.yugastore.ui;
+package com.yugabyte.app.yugastore.cart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CronosUIApplication {
+public class YugastoreCart {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CronosUIApplication.class, args);
+		SpringApplication.run(YugastoreCart.class, args);
 	}
+
 }
