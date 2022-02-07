@@ -5,7 +5,7 @@
   "dependencies": {
     "amazon-product-api": "^0.4.4",
     "axios": "^0.18.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "prop-types": "^15.5.10",
     "react": "^16.2.0",
     "react-animate-css": "0.0.1",
