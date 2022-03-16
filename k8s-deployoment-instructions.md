@@ -89,7 +89,8 @@ $ cqlsh -f resources/schema.cql
 Next, load some sample data. Follow the data load steps in 
 
 ```
-$ ./resources/dataload.sh
+$ cd resources/
+$ ./dataload.sh
 ```
 
 Create the postgres tables in `resources/schema.sql` for the YSQL tables
