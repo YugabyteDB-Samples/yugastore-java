@@ -14,7 +14,7 @@
     "react-dom": "^16.2.0",
     "react-materialize": "^1.0.10",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.1"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
