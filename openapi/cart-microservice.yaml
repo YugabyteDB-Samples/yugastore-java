@@ -1,0 +1,174 @@
+openapi: 3.0.3
+info:
+  title: Cart Microservice API
+  description: |
+    Shopping cart management microservice for the Yugastore e-commerce platform.
+    Handles adding, removing, and retrieving products in a user's shopping cart.
+  version: 1.0.0
+  contact:
+    name: Yugastore Team
+servers:
+  - url: http://localhost:8083
+    description: Local development server
+
+paths:
+  /cart-microservice/shoppingCart/addProduct:
+    get:
+      summary: Add product to cart
+      description: Adds a product to the user's shopping cart. If the product already exists, increments the quantity.
+      operationId: addProductToCart
+      tags:
+        - Shopping Cart
+      parameters:
+        - name: userid
+          in: query
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: string
+          example: "u1001"
+        - name: asin
+          in: query
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Product successfully added to cart
+          content:
+            application/json:
+              schema:
+                type: string
+              example: "Added to Cart"
+        '500':
+          description: Internal server error
+
+  /cart-microservice/shoppingCart/productsInCart:
+    get:
+      summary: Get products in cart
+      description: Retrieves all products currently in the user's shopping cart with their quantities.
+      operationId: getProductsInCart
+      tags:
+        - Shopping Cart
+      parameters:
+        - name: userid
+          in: query
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: string
+          example: "u1001"
+      responses:
+        '200':
+          description: Successfully retrieved cart contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartContents'
+              example:
+                "B00BKQT2OI": 2
+                "B00BKQT3XT": 1
+        '500':
+          description: Internal server error
+
+  /cart-microservice/shoppingCart/removeProduct:
+    get:
+      summary: Remove product from cart
+      description: Removes a product from the user's shopping cart. Decrements quantity or removes entirely if quantity reaches zero.
+      operationId: removeProductFromCart
+      tags:
+        - Shopping Cart
+      parameters:
+        - name: userid
+          in: query
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: string
+          example: "u1001"
+        - name: asin
+          in: query
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Product successfully removed from cart
+          content:
+            application/json:
+              schema:
+                type: string
+              example: "Removing from Cart"
+        '500':
+          description: Internal server error
+
+  /cart-microservice/shoppingCart/clearCart:
+    get:
+      summary: Clear cart
+      description: Removes all products from the user's shopping cart. Typically called after successful checkout.
+      operationId: clearCart
+      tags:
+        - Shopping Cart
+      parameters:
+        - name: userid
+          in: query
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: string
+          example: "u1001"
+      responses:
+        '200':
+          description: Cart successfully cleared
+          content:
+            application/json:
+              schema:
+                type: string
+              example: "Clearing Cart, Checkout successful"
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    CartContents:
+      type: object
+      description: Map of product ASINs to quantities
+      additionalProperties:
+        type: integer
+        description: Quantity of the product in cart
+      example:
+        "B00BKQT2OI": 2
+        "B00BKQT3XT": 1
+
+    ShoppingCart:
+      type: object
+      description: Shopping cart entity
+      properties:
+        cartKey:
+          type: string
+          description: Unique cart entry key
+        userId:
+          type: string
+          description: User identifier
+        asin:
+          type: string
+          description: Product ASIN
+        time_added:
+          type: string
+          description: Timestamp when product was added
+        quantity:
+          type: integer
+          description: Quantity of product in cart
+      required:
+        - cartKey
+        - userId
+        - asin
+        - quantity
+
+tags:
+  - name: Shopping Cart
+    description: Operations for managing the shopping cart

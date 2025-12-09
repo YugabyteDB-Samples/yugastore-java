@@ -1,0 +1,236 @@
+%% YugaStore Java Microservices Architecture
+%% This diagram shows the component and class architecture of the application
+
+flowchart TB
+    subgraph Client["Client Layer"]
+        ReactUI["React UI"]
+    end
+
+    subgraph Gateway["API Gateway Microservice :8081"]
+        direction TB
+        GatewayMain["YugastoreApiGateway<br/>@SpringBootApplication"]
+
+        subgraph GatewayControllers["Controllers"]
+            ProductCatalogCtrl["ProductCatalogController"]
+            ShoppingCartCtrl["ShoppingCartController"]
+        end
+
+        subgraph GatewayServices["Services"]
+            ProductCatalogSvcRest["ProductCatalogServiceRest<br/>«interface»"]
+            ShoppingCartSvcRest["ShoppingCartServiceRest<br/>«interface»"]
+            CheckoutSvcRest["CheckoutServiceRest<br/>«interface»"]
+            ProductCatalogSvcImpl["ProductCatalogServiceRestImpl"]
+            ShoppingCartSvcImpl["ShoppingCartServiceRestImpl"]
+            CheckoutSvcImpl["CheckoutServiceRestImpl"]
+        end
+
+        subgraph GatewayFeignClients["Feign Clients"]
+            ProductFeignClient["ProductCatalogRestClient<br/>@FeignClient"]
+            CartFeignClient["ShoppingCartRestClient<br/>@FeignClient"]
+            CheckoutFeignClient["CheckoutRestClient<br/>@FeignClient"]
+        end
+
+        ProductCatalogSvcImpl -.->|implements| ProductCatalogSvcRest
+        ShoppingCartSvcImpl -.->|implements| ShoppingCartSvcRest
+        CheckoutSvcImpl -.->|implements| CheckoutSvcRest
+
+        ProductCatalogCtrl --> ProductCatalogSvcRest
+        ShoppingCartCtrl --> ShoppingCartSvcRest
+        ShoppingCartCtrl --> CheckoutSvcRest
+
+        ProductCatalogSvcImpl --> ProductFeignClient
+        ShoppingCartSvcImpl --> CartFeignClient
+        CheckoutSvcImpl --> CheckoutFeignClient
+    end
+
+    subgraph Products["Products Microservice :8082"]
+        direction TB
+        ProductsMain["YugastoreProducts<br/>@SpringBootApplication"]
+
+        subgraph ProductControllers["Controllers"]
+            ProductCtrl["ProductCatalogController"]
+        end
+
+        subgraph ProductServices["Services"]
+            ProductSvc["ProductService<br/>«interface»"]
+            ProductSvcImpl["ProductServiceImpl"]
+            ProductInvSvc["ProductInventoryService<br/>«interface»"]
+            ProductInvSvcImpl["ProductInventoryServiceImpl"]
+            ProductRankSvc["ProductRankingService<br/>«interface»"]
+            ProductRankSvcImpl["ProductRankingServiceImpl"]
+        end
+
+        subgraph ProductRepos["Repositories"]
+            ProductMetaRepo["ProductMetadataRepo<br/>extends CassandraRepository"]
+            ProductInvRepo["ProductInventoryRepository<br/>extends CassandraRepository"]
+            ProductRankRepo["ProductRankingRepository<br/>extends CassandraRepository"]
+        end
+
+        subgraph ProductDomain["Domain Models"]
+            ProductMetadata["ProductMetadata<br/>@Table products"]
+            ProductInventory["ProductInventory<br/>@Table product_inventory"]
+            ProductRanking["ProductRanking<br/>@Table product_rankings"]
+            ProductRankingKey["ProductRankingKey<br/>@PrimaryKeyClass"]
+        end
+
+        ProductSvcImpl -.->|implements| ProductSvc
+        ProductInvSvcImpl -.->|implements| ProductInvSvc
+        ProductRankSvcImpl -.->|implements| ProductRankSvc
+
+        ProductCtrl --> ProductSvc
+        ProductCtrl --> ProductRankSvc
+
+        ProductSvcImpl --> ProductMetaRepo
+        ProductInvSvcImpl --> ProductInvRepo
+        ProductRankSvcImpl --> ProductRankRepo
+
+        ProductMetaRepo --> ProductMetadata
+        ProductInvRepo --> ProductInventory
+        ProductRankRepo --> ProductRanking
+        ProductRanking --> ProductRankingKey
+    end
+
+    subgraph Cart["Cart Microservice :8083"]
+        direction TB
+        CartMain["YugastoreCart<br/>@SpringBootApplication"]
+
+        subgraph CartControllers["Controllers"]
+            CartCtrl["ShoppingCartController"]
+        end
+
+        subgraph CartServices["Services"]
+            CartSvcImpl["ShoppingCartImpl<br/>@Transactional"]
+        end
+
+        subgraph CartRepos["Repositories"]
+            CartRepo["ShoppingCartRepository<br/>extends CrudRepository"]
+        end
+
+        subgraph CartDomain["Domain Models"]
+            ShoppingCart["ShoppingCart<br/>@Entity shopping_cart"]
+            ShoppingCartKey["ShoppingCartKey"]
+        end
+
+        CartCtrl --> CartSvcImpl
+        CartSvcImpl --> CartRepo
+        CartRepo --> ShoppingCart
+        ShoppingCart --> ShoppingCartKey
+    end
+
+    subgraph Checkout["Checkout Microservice :8086"]
+        direction TB
+        CheckoutMain["YugastoreCheckout<br/>@SpringBootApplication"]
+
+        subgraph CheckoutControllers["Controllers"]
+            CheckoutCtrl["CheckoutController"]
+        end
+
+        subgraph CheckoutServices["Services"]
+            CheckoutSvc["CheckoutServiceImpl<br/>@Transactional"]
+        end
+
+        subgraph CheckoutRepos["Repositories"]
+            CheckoutInvRepo["ProductInventoryRepository<br/>extends CassandraRepository"]
+        end
+
+        subgraph CheckoutFeignClients["Feign Clients"]
+            CheckoutProductClient["ProductCatalogRestClient<br/>@FeignClient"]
+            CheckoutCartClient["ShoppingCartRestClient<br/>@FeignClient"]
+        end
+
+        subgraph CheckoutDomain["Domain Models"]
+            Order["Order"]
+            CheckoutStatus["CheckoutStatus"]
+        end
+
+        CheckoutCtrl --> CheckoutSvc
+        CheckoutSvc --> CheckoutInvRepo
+        CheckoutSvc --> CheckoutProductClient
+        CheckoutSvc --> CheckoutCartClient
+        CheckoutSvc --> Order
+        CheckoutSvc --> CheckoutStatus
+    end
+
+    subgraph Login["Login Microservice :8085"]
+        direction TB
+        LoginMain["YugastoreLoginService<br/>@SpringBootApplication"]
+
+        subgraph LoginControllers["Controllers"]
+            UserCtrl["UserController"]
+        end
+
+        subgraph LoginServices["Services"]
+            UserSvc["UserService<br/>«interface»"]
+            UserSvcImpl["UserServiceImpl"]
+            SecuritySvc["SecurityService<br/>«interface»"]
+            SecuritySvcImpl["SecurityServiceImpl"]
+            UserDetailsSvc["UserDetailsServiceImpl"]
+        end
+
+        subgraph LoginRepos["Repositories"]
+            UserRepo["UserRepository<br/>extends JpaRepository"]
+            RoleRepo["RoleRepository<br/>extends JpaRepository"]
+        end
+
+        subgraph LoginDomain["Domain Models"]
+            User["User<br/>@Entity username"]
+            Role["Role<br/>@Entity role"]
+        end
+
+        UserSvcImpl -.->|implements| UserSvc
+        SecuritySvcImpl -.->|implements| SecuritySvc
+
+        UserCtrl --> UserSvc
+        UserSvcImpl --> UserRepo
+        UserDetailsSvc --> UserRepo
+        UserRepo --> User
+        RoleRepo --> Role
+        User -->|ManyToMany| Role
+    end
+
+    subgraph Databases["Data Layer"]
+        direction LR
+        subgraph Cassandra["YugabyteDB / Cassandra :9042"]
+            CassandraDB[("Keyspace: cronos<br/>- products<br/>- product_inventory<br/>- product_rankings")]
+        end
+
+        subgraph Postgres["PostgreSQL :5433"]
+            PostgresDB[("- shopping_cart<br/>- username<br/>- role")]
+        end
+    end
+
+    %% Client connections
+    ReactUI --> Gateway
+
+    %% Feign client connections (service-to-service)
+    ProductFeignClient -->|REST| Products
+    CartFeignClient -->|REST| Cart
+    CheckoutFeignClient -->|REST| Checkout
+    CheckoutProductClient -->|REST| Products
+    CheckoutCartClient -->|REST| Cart
+
+    %% Database connections
+    ProductMetaRepo -->|YCQL| CassandraDB
+    ProductInvRepo -->|YCQL| CassandraDB
+    ProductRankRepo -->|YCQL| CassandraDB
+    CheckoutInvRepo -->|YCQL| CassandraDB
+    CartRepo -->|JPA| PostgresDB
+    UserRepo -->|JPA| PostgresDB
+    RoleRepo -->|JPA| PostgresDB
+
+    %% Styling
+    classDef controller fill:#a8d5ba,stroke:#2d6a4f
+    classDef service fill:#b8d4e3,stroke:#1d3557
+    classDef repo fill:#f4d35e,stroke:#ee964b
+    classDef domain fill:#f7b267,stroke:#f25c54
+    classDef feign fill:#d4a5a5,stroke:#9c6644
+    classDef database fill:#c8b6ff,stroke:#7b2cbf
+    classDef main fill:#90be6d,stroke:#43aa8b
+
+    class ProductCatalogCtrl,ShoppingCartCtrl,ProductCtrl,CartCtrl,CheckoutCtrl,UserCtrl controller
+    class ProductCatalogSvcRest,ShoppingCartSvcRest,CheckoutSvcRest,ProductCatalogSvcImpl,ShoppingCartSvcImpl,CheckoutSvcImpl,ProductSvc,ProductSvcImpl,ProductInvSvc,ProductInvSvcImpl,ProductRankSvc,ProductRankSvcImpl,CartSvcImpl,CheckoutSvc,UserSvc,UserSvcImpl,SecuritySvc,SecuritySvcImpl,UserDetailsSvc service
+    class ProductMetaRepo,ProductInvRepo,ProductRankRepo,CartRepo,CheckoutInvRepo,UserRepo,RoleRepo repo
+    class ProductMetadata,ProductInventory,ProductRanking,ProductRankingKey,ShoppingCart,ShoppingCartKey,Order,CheckoutStatus,User,Role domain
+    class ProductFeignClient,CartFeignClient,CheckoutFeignClient,CheckoutProductClient,CheckoutCartClient feign
+    class CassandraDB,PostgresDB database
+    class GatewayMain,ProductsMain,CartMain,CheckoutMain,LoginMain main

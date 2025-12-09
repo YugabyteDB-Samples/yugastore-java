@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: React UI Backend-for-Frontend (BFF) API
+  description: |
+    Backend-for-Frontend API layer for the Yugastore React UI.
+    This service provides endpoints specifically designed for the React frontend,
+    proxying requests to the API Gateway and formatting responses for the UI.
+
+    The BFF pattern allows the frontend to make simpler calls while the backend
+    handles the complexity of coordinating with multiple microservices.
+  version: 1.0.0
+  contact:
+    name: Yugastore Team
+servers:
+  - url: http://localhost:8080
+    description: Local development server (React UI)
+
+paths:
+  /api/hello:
+    get:
+      summary: Health check endpoint
+      description: Simple health check that returns the current server time.
+      operationId: hello
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: "Hello, the time at the server is now Mon Jan 15 10:30:00 EST 2024"
+
+  /products:
+    get:
+      summary: Get homepage products
+      description: Retrieves products for the homepage display (default 10 products).
+      operationId: getHomePageProducts
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Successfully retrieved products
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string of product array (parsed by frontend)
+
+  /products/category/{category}:
+    get:
+      summary: Get products by category
+      description: Retrieves products within a specific category with pagination.
+      operationId: getProductsByCategory
+      tags:
+        - Products
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: Product category name
+          schema:
+            type: string
+          example: "Books"
+        - name: limit
+          in: query
+          required: true
+          description: Maximum number of products to return
+          schema:
+            type: integer
+          example: 12
+        - name: offset
+          in: query
+          required: true
+          description: Number of products to skip for pagination
+          schema:
+            type: integer
+          example: 0
+      responses:
+        '200':
+          description: Successfully retrieved category products
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string of product ranking array
+
+  /products/details:
+    get:
+      summary: Get product details
+      description: Retrieves detailed metadata for a specific product.
+      operationId: getProductDetails
+      tags:
+        - Products
+      parameters:
+        - name: asin
+          in: query
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Successfully retrieved product details
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string of product metadata
+
+  /cart/add:
+    post:
+      summary: Add product to cart
+      description: Adds a product to the current user's shopping cart.
+      operationId: addProductToCart
+      tags:
+        - Cart
+      parameters:
+        - name: asin
+          in: query
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Product added, returns updated cart contents
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string of cart contents (ASIN -> quantity map)
+
+  /cart/get:
+    post:
+      summary: Get cart contents
+      description: Retrieves all products in the current user's shopping cart.
+      operationId: showCart
+      tags:
+        - Cart
+      responses:
+        '200':
+          description: Successfully retrieved cart contents
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string of cart contents (ASIN -> quantity map)
+              example: '{"B00BKQT2OI": 2, "B00BKQT3XT": 1}'
+
+  /cart/getCart:
+    post:
+      summary: Get cart contents (alternate endpoint)
+      description: Alternative endpoint to retrieve shopping cart contents.
+      operationId: getCart
+      tags:
+        - Cart
+      responses:
+        '200':
+          description: Successfully retrieved cart contents
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string of cart contents
+
+  /cart/remove:
+    post:
+      summary: Remove product from cart
+      description: Removes a product from the current user's shopping cart.
+      operationId: removeProductFromCart
+      tags:
+        - Cart
+      parameters:
+        - name: asin
+          in: query
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Product removed, returns updated cart contents
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string of updated cart contents
+
+  /cart/checkout:
+    post:
+      summary: Process checkout
+      description: |
+        Processes checkout for the current user's shopping cart.
+        Validates inventory, creates order, and clears cart.
+      operationId: checkoutCart
+      tags:
+        - Checkout
+      responses:
+        '200':
+          description: Checkout processed
+          content:
+            application/json:
+              schema:
+                type: string
+                description: JSON string with checkout status, order number, and details
+              example: '{"status": "SUCCESS", "orderNumber": "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "orderDetails": "Customer bought these Items: Product: The Great Gatsby, Quantity: 2; Order Total is : 29.98"}'
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Products
+    description: Product catalog operations for the UI
+  - name: Cart
+    description: Shopping cart management for the UI
+  - name: Checkout
+    description: Checkout operations for the UI
