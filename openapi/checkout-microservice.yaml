@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Checkout Microservice API
+  description: |
+    Order processing and checkout microservice for the Yugastore e-commerce platform.
+    Handles order creation, inventory validation, and transactional checkout processing.
+  version: 1.0.0
+  contact:
+    name: Yugastore Team
+servers:
+  - url: http://localhost:8086
+    description: Local development server
+
+paths:
+  /checkout-microservice/shoppingCart/checkout:
+    post:
+      summary: Process checkout
+      description: |
+        Processes the checkout for the current user's shopping cart.
+
+        This operation:
+        1. Retrieves all products in the user's cart
+        2. Validates inventory availability for each product
+        3. Decrements inventory quantities using a Cassandra transaction
+        4. Creates an order record with order details
+        5. Clears the shopping cart
+
+        If any product is out of stock, the checkout fails and no changes are made.
+      operationId: checkout
+      tags:
+        - Checkout
+      responses:
+        '200':
+          description: Checkout processed (check status field for success/failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutStatus'
+              examples:
+                success:
+                  summary: Successful checkout
+                  value:
+                    status: "SUCCESS"
+                    orderNumber: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    orderDetails: "Customer bought these Items: Product: The Great Gatsby, Quantity: 2; Order Total is : 29.98"
+                failure:
+                  summary: Failed checkout (out of stock)
+                  value:
+                    status: "FAILURE"
+                    orderNumber: ""
+                    orderDetails: "Product is Out of Stock!"
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    CheckoutStatus:
+      type: object
+      description: Result of checkout operation
+      properties:
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - FAILURE
+          description: Status of the checkout operation
+          example: "SUCCESS"
+        orderNumber:
+          type: string
+          description: UUID of the created order (empty on failure)
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        orderDetails:
+          type: string
+          description: Human-readable order details or error message
+          example: "Customer bought these Items: Product: The Great Gatsby, Quantity: 2; Order Total is : 29.98"
+      required:
+        - status
+
+    Order:
+      type: object
+      description: Order record stored in the database
+      properties:
+        id:
+          type: string
+          description: Unique order identifier (UUID)
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        user_id:
+          type: integer
+          description: User identifier who placed the order
+          example: 1
+        order_details:
+          type: string
+          description: Human-readable summary of ordered items
+          example: "Customer bought these Items: Product: The Great Gatsby, Quantity: 2; Order Total is : 29.98"
+        order_time:
+          type: string
+          description: Timestamp when the order was placed
+          example: "2024-01-15T10:30:00"
+        order_total:
+          type: number
+          format: double
+          description: Total order amount in USD
+          example: 29.98
+      required:
+        - id
+        - user_id
+        - order_details
+        - order_time
+        - order_total
+
+    ProductInventory:
+      type: object
+      description: Product inventory record
+      properties:
+        id:
+          type: string
+          description: Product ASIN
+          example: "B00BKQT2OI"
+        quantity:
+          type: integer
+          description: Available quantity in stock
+          example: 150
+      required:
+        - id
+        - quantity
+
+tags:
+  - name: Checkout
+    description: Order processing and checkout operations

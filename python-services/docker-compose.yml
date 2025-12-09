@@ -1,0 +1,127 @@
+version: '3.9'
+
+services:
+  eureka-server:
+    build: 
+      context: ../eureka-server-local
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - ipaddr=eureka-server
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bookstore
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  products-microservice:
+    build: products-service
+    container_name: products-microservice
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_URI=http://eureka-server:8761/eureka
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/bookstore
+      - PORT=8082
+    depends_on:
+      eureka-server:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+
+  cart-microservice:
+    build: cart-service
+    container_name: cart-microservice
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_URI=http://eureka-server:8761/eureka
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/bookstore
+      - PORT=8083
+    depends_on:
+      eureka-server:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+
+  checkout-microservice:
+    build: checkout-service
+    container_name: checkout-microservice
+    ports:
+      - "8084:8084"
+    environment:
+      - EUREKA_URI=http://eureka-server:8761/eureka
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/bookstore
+      - PORT=8084
+      - PRODUCTS_SERVICE_URL=http://products-microservice:8082/products-microservice
+      - CART_SERVICE_URL=http://cart-microservice:8083/cart-microservice
+    depends_on:
+      eureka-server:
+        condition: service_started
+      products-microservice:
+        condition: service_started
+      cart-microservice:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+
+  login-microservice:
+    build: login-service
+    container_name: login-microservice
+    ports:
+      - "8085:8085"
+    environment:
+      - EUREKA_URI=http://eureka-server:8761/eureka
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/bookstore
+      - PORT=8085
+    depends_on:
+      eureka-server:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+
+  api-gateway-microservice:
+    build: api-gateway
+    container_name: api-gateway-microservice
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_URI=http://eureka-server:8761/eureka
+      - PORT=8081
+      - PRODUCTS_SERVICE_URL=http://products-microservice:8082
+      - CART_SERVICE_URL=http://cart-microservice:8083
+      - CHECKOUT_SERVICE_URL=http://checkout-microservice:8084
+      - LOGIN_SERVICE_URL=http://login-microservice:8085
+    depends_on:
+      eureka-server:
+        condition: service_started
+      products-microservice:
+        condition: service_started
+      cart-microservice:
+        condition: service_started
+      checkout-microservice:
+        condition: service_started
+      login-microservice:
+        condition: service_started
+
+  frontend:
+    build: ../nextjs-frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8081
+    depends_on:
+      - api-gateway-microservice

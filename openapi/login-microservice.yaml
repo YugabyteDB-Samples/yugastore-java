@@ -1,0 +1,201 @@
+openapi: 3.0.3
+info:
+  title: Login Microservice API
+  description: |
+    User authentication and registration microservice for the Yugastore e-commerce platform.
+    Provides user registration, login, and session management functionality.
+
+    Note: This service uses server-side rendering with Thymeleaf templates for the UI.
+    The endpoints below return HTML pages, not JSON responses.
+  version: 1.0.0
+  contact:
+    name: Yugastore Team
+servers:
+  - url: http://localhost:8085
+    description: Local development server
+
+paths:
+  /registration:
+    get:
+      summary: Display registration page
+      description: Returns the user registration form page.
+      operationId: showRegistrationForm
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Registration page HTML
+          content:
+            text/html:
+              schema:
+                type: string
+                description: HTML page with registration form
+
+    post:
+      summary: Process registration
+      description: |
+        Processes user registration form submission.
+        Validates the user input and creates a new user account if valid.
+        Redirects to login page on success, or back to registration form with errors.
+      operationId: processRegistration
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRegistrationForm'
+      responses:
+        '302':
+          description: Redirect to login page on success
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Redirect URL (/login)
+        '200':
+          description: Registration form with validation errors
+          content:
+            text/html:
+              schema:
+                type: string
+                description: HTML page with error messages
+
+  /login:
+    get:
+      summary: Display login page
+      description: Returns the user login form page.
+      operationId: showLoginForm
+      tags:
+        - Authentication
+      parameters:
+        - name: error
+          in: query
+          required: false
+          description: Present if login failed
+          schema:
+            type: string
+        - name: logout
+          in: query
+          required: false
+          description: Present if user just logged out
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Login page HTML
+          content:
+            text/html:
+              schema:
+                type: string
+                description: HTML page with login form
+
+  /:
+    get:
+      summary: Welcome/home redirect
+      description: Redirects to the main application (React UI).
+      operationId: welcome
+      tags:
+        - Navigation
+      responses:
+        '302':
+          description: Redirect to main application
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Redirect URL (configured in application properties)
+
+  /welcome:
+    get:
+      summary: Welcome page redirect
+      description: Redirects to the main application (React UI).
+      operationId: welcomePage
+      tags:
+        - Navigation
+      responses:
+        '302':
+          description: Redirect to main application
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Redirect URL (configured in application properties)
+
+components:
+  schemas:
+    UserRegistrationForm:
+      type: object
+      description: User registration form data
+      properties:
+        username:
+          type: string
+          description: Desired username
+          minLength: 3
+          maxLength: 32
+          example: "johndoe"
+        password:
+          type: string
+          format: password
+          description: Password
+          minLength: 8
+          example: "securePassword123"
+        passwordConfirm:
+          type: string
+          format: password
+          description: Password confirmation (must match password)
+          example: "securePassword123"
+      required:
+        - username
+        - password
+        - passwordConfirm
+
+    User:
+      type: object
+      description: User entity stored in the database
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique user identifier
+          example: 1
+        username:
+          type: string
+          description: Username
+          example: "johndoe"
+        password:
+          type: string
+          format: password
+          description: Hashed password (never returned in responses)
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+          description: User roles for authorization
+      required:
+        - id
+        - username
+
+    Role:
+      type: object
+      description: User role for authorization
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Role identifier
+          example: 1
+        name:
+          type: string
+          description: Role name
+          example: "ROLE_USER"
+      required:
+        - id
+        - name
+
+tags:
+  - name: Authentication
+    description: User registration and login operations
+  - name: Navigation
+    description: Navigation and redirect endpoints

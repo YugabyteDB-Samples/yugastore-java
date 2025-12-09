@@ -1,6 +1,6 @@
 # Yugastore in Java
 
-![Homepage](docs/home.png)
+![Homepage](assets/images/home.png)
 This is an implementation of a sample ecommerce app. This microservices-based retail marketplace or eCommerce app is composed of **microservices written in Spring (Java)**, a **UI based on React** and **YugabyteDB as the [distributed SQL](https://www.yugabyte.com/tech/distributed-sql/) database**.
 
 If you're using this demo app, please :star: this repository! We appreciate your support.
@@ -46,7 +46,74 @@ The architecture diagram of Yugastore is shown below.
 
 # Build and run
 
-To build, simply run the following from the base directory:
+There are two ways to build and run the application:
+1. **Automated Bootstrap Script** (Recommended) - Single command to set up everything
+2. **Manual Steps** - Step-by-step instructions for more control
+
+## Quick Start with Bootstrap Script
+
+The easiest way to get started is using the automated bootstrap script, which handles all prerequisites, builds the application, and starts all services.
+
+```bash
+# Using native YugabyteDB installation (recommended for development)
+./scripts/bootstrap.sh --yugabyte=native
+
+# Or using Docker for YugabyteDB
+./scripts/bootstrap.sh --yugabyte=docker
+
+# For help and all options
+./scripts/bootstrap.sh --help
+```
+
+### Prerequisites Requiring Manual Intervention
+
+The bootstrap script will attempt to install missing prerequisites automatically, but the following may require manual steps:
+
+| Prerequisite | Platform | Manual Action Required |
+|--------------|----------|----------------------|
+| **Homebrew** | macOS | Install from [brew.sh](https://brew.sh) if not present |
+| **Docker Desktop** | macOS/Windows | Must be installed manually from [docker.com](https://www.docker.com/products/docker-desktop/) |
+| **Port 7000 conflict** | macOS | Disable AirPlay Receiver in System Settings > General > AirDrop & Handoff, or YugabyteDB will use alternate port 7001 |
+| **WSL** | Windows | The script requires WSL (Windows Subsystem for Linux) to run on Windows |
+
+### Bootstrap Script Options
+
+| Option | Description |
+|--------|-------------|
+| `--non-interactive` | Run without prompts (assumes YugabyteDB is ready) |
+| `--yugabyte=native` | Install YugabyteDB via native package manager (Homebrew on macOS) |
+| `--yugabyte=docker` | Run YugabyteDB in Docker container (default) |
+| `--help`, `-h` | Show help message |
+
+### What the Bootstrap Script Does
+
+1. Checks and installs prerequisites (Java 17, Maven, Python 3, cqlsh, psql)
+2. Installs and starts YugabyteDB (native or Docker based on option)
+3. Builds all microservices with Maven
+4. Creates database schemas (CQL and SQL)
+5. Loads sample product data
+6. Starts all 6 microservices in the background
+7. Provides URLs for all running services
+
+### Stopping Services
+
+To stop all running microservices:
+
+```bash
+pkill -f 'spring-boot:run'
+```
+
+To stop YugabyteDB (native installation):
+
+```bash
+yugabyted stop
+```
+
+---
+
+## Manual Build and Run
+
+To build manually, run the following from the base directory:
 
 ```
 $ mvn -DskipTests package
@@ -54,7 +121,7 @@ $ mvn -DskipTests package
 
 To run the app on host machine, you need to first install YugabyteDB, create the necessary tables, start each of the microservices and finally the React UI.
 
-## Running the app on host
+### Running the app on host (Manual Steps)
 
 Make sure you have built the app as described above. Now do the following steps.
 
@@ -153,20 +220,20 @@ Once all services are registered, you can browse the marketplace app at [http://
 
 
 ### Home
-![Home Page](docs/home.png)
+![Home Page](assets/images/home.png)
 
 ### Product Category Page
 
-![Product Category](docs/product-category.png)
+![Product Category](assets/images/product-category.png)
 
 ### Product Detail Page
 
-![Product Page](docs/product.png)
+![Product Page](assets/images/product.png)
 
 ### Car
 
-![Cart](docs/cart.png)
+![Cart](assets/images/cart.png)
 
 ## Checkout
 
-![Checkout](docs/checkout.png)
+![Checkout](assets/images/checkout.png)

@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "base_url": "http://localhost:8888",
+  "api_key": "test-token-12345",
+  "timeout": 30,
+  "max_retries": 3
+}
+
+

@@ -1,0 +1,72 @@
+ARCHITECTURAL CONSTITUTION
+Guiding Principles for System Design
+=====================================
+
+SECURITY PRINCIPLES
+
+PRINCIPLE: The system must never store passwords in plaintext
+PRINCIPLE: All sensitive data shall be encrypted both at rest and in transit
+PRINCIPLE: Authentication tokens must have expiration times
+PRINCIPLE: The system shall not log credit card numbers or CVV codes
+RULE: Security vulnerabilities must be patched within 48 hours of discovery
+- The system must not use deprecated cryptographic algorithms
+- All user input shall be validated and sanitized
+- Session management must be secure and prevent session fixation
+
+PERFORMANCE PRINCIPLES
+
+PRINCIPLE: Database queries must be optimized with proper indexing
+PRINCIPLE: The system shall implement caching strategies for frequently accessed data
+RULE: No single API endpoint may have response time exceeding 5 seconds
+- Network calls should be asynchronous where possible
+- The system must scale horizontally to handle increased load
+
+DATA INTEGRITY PRINCIPLES
+
+PRINCIPLE: All database transactions must be ACID compliant
+PRINCIPLE: The system shall never lose customer data
+RULE: Data modifications must be auditable with complete history
+- Referential integrity must be maintained at all times
+- Critical data operations shall be performed within database transactions
+
+CODE QUALITY PRINCIPLES
+
+PRINCIPLE: All code must follow established coding standards
+PRINCIPLE: Code coverage for unit tests shall be at least 80%
+RULE: No code may be deployed to production without peer review
+- Functions should not exceed 50 lines of code
+- Dependencies must be kept up to date
+
+USER EXPERIENCE PRINCIPLES
+
+PRINCIPLE: The system must provide clear feedback for all user actions
+PRINCIPLE: Error messages shall be user-friendly and actionable
+RULE: The UI must not use pop-up advertisements
+- Loading states should be indicated to users
+- The system should work on mobile devices
+
+OPERATIONS PRINCIPLES
+
+PRINCIPLE: The system must support zero-downtime deployments
+PRINCIPLE: All configuration shall be externalized from code
+RULE: The system must not require manual intervention for routine operations
+- Logging must be structured and searchable
+- The system should auto-recover from transient failures
+
+COMPLIANCE PRINCIPLES
+
+PRINCIPLE: The system must comply with GDPR requirements
+PRINCIPLE: PCI DSS compliance shall be maintained for payment processing
+RULE: User consent must be obtained before collecting personal data
+- Data retention policies must be enforced automatically
+- Users must have the ability to delete their accounts and data
+
+RELIABILITY PRINCIPLES
+
+PRINCIPLE: The system must maintain 99.9% uptime
+PRINCIPLE: Critical services shall have redundancy and failover
+RULE: Single points of failure must not exist in production
+- Health checks must be implemented for all services
+- Circuit breakers should prevent cascade failures
+
+

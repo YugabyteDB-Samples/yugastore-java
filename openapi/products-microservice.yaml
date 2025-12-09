@@ -1,0 +1,259 @@
+openapi: 3.0.3
+info:
+  title: Products Microservice API
+  description: |
+    Product catalog microservice for the Yugastore e-commerce platform.
+    Provides product metadata, catalog browsing, and category-based product rankings.
+  version: 1.0.0
+  contact:
+    name: Yugastore Team
+servers:
+  - url: http://localhost:8082
+    description: Local development server
+
+paths:
+  /products-microservice/product/{asin}:
+    get:
+      summary: Get product details
+      description: Retrieves detailed metadata for a specific product by its ASIN (Amazon Standard Identification Number).
+      operationId: getProductDetails
+      tags:
+        - Products
+      parameters:
+        - name: asin
+          in: path
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Successfully retrieved product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductMetadata'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+
+  /products-microservice/products:
+    get:
+      summary: Get all products
+      description: Retrieves a paginated list of all products in the catalog.
+      operationId: getProducts
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          description: Maximum number of products to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          example: 12
+        - name: offset
+          in: query
+          required: true
+          description: Number of products to skip for pagination
+          schema:
+            type: integer
+            minimum: 0
+          example: 0
+      responses:
+        '200':
+          description: Successfully retrieved product list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductMetadata'
+        '500':
+          description: Internal server error
+
+  /products-microservice/products/category/{category}:
+    get:
+      summary: Get products by category
+      description: Retrieves products within a specific category, sorted by sales rank.
+      operationId: getProductsByCategory
+      tags:
+        - Products
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: Product category name
+          schema:
+            type: string
+          example: "Books"
+        - name: limit
+          in: query
+          required: true
+          description: Maximum number of products to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          example: 12
+        - name: offset
+          in: query
+          required: true
+          description: Number of products to skip for pagination
+          schema:
+            type: integer
+            minimum: 0
+          example: 0
+      responses:
+        '200':
+          description: Successfully retrieved category products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductRanking'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ProductMetadata:
+      type: object
+      description: Complete product metadata
+      properties:
+        id:
+          type: string
+          description: Product ASIN (Amazon Standard Identification Number)
+          example: "B00BKQT2OI"
+        brand:
+          type: string
+          description: Product brand name
+          example: "Penguin Books"
+        categories:
+          type: array
+          items:
+            type: string
+          description: List of categories the product belongs to
+          example: ["Books", "Fiction", "Literature"]
+        imUrl:
+          type: string
+          description: URL to the product image
+          example: "https://images-na.ssl-images-amazon.com/images/I/51example.jpg"
+        price:
+          type: number
+          format: double
+          description: Product price in USD
+          example: 14.99
+        title:
+          type: string
+          description: Product title
+          example: "The Great Gatsby"
+        description:
+          type: string
+          description: Product description
+          example: "A novel written by American author F. Scott Fitzgerald..."
+        also_bought:
+          type: array
+          items:
+            type: string
+          description: ASINs of products frequently bought together
+          example: ["B00BKQT3XT", "B00BKQT4YU"]
+        also_viewed:
+          type: array
+          items:
+            type: string
+          description: ASINs of products frequently viewed together
+          example: ["B00BKQT5ZV"]
+        bought_together:
+          type: array
+          items:
+            type: string
+          description: ASINs of products bought in the same order
+          example: ["B00BKQT6AW"]
+        buy_after_viewing:
+          type: array
+          items:
+            type: string
+          description: ASINs of products bought after viewing this one
+          example: ["B00BKQT7BX"]
+        num_reviews:
+          type: integer
+          description: Total number of reviews
+          example: 1250
+        num_stars:
+          type: number
+          format: double
+          description: Total number of stars from all reviews
+          example: 4875.5
+        avg_stars:
+          type: number
+          format: double
+          description: Average star rating (0-5)
+          example: 3.9
+      required:
+        - id
+        - title
+        - price
+
+    ProductRanking:
+      type: object
+      description: Product with ranking information for category browsing
+      properties:
+        id:
+          $ref: '#/components/schemas/ProductRankingKey'
+        salesRank:
+          type: integer
+          description: Sales rank within the category
+          example: 1
+        title:
+          type: string
+          description: Product title
+          example: "The Great Gatsby"
+        price:
+          type: number
+          format: double
+          description: Product price in USD
+          example: 14.99
+        imUrl:
+          type: string
+          description: URL to the product image
+          example: "https://images-na.ssl-images-amazon.com/images/I/51example.jpg"
+        num_reviews:
+          type: integer
+          description: Total number of reviews
+          example: 1250
+        num_stars:
+          type: number
+          format: double
+          description: Total number of stars from all reviews
+          example: 4875.5
+        avg_stars:
+          type: number
+          format: double
+          description: Average star rating (0-5)
+          example: 3.9
+
+    ProductRankingKey:
+      type: object
+      description: Composite key for product ranking
+      properties:
+        asin:
+          type: string
+          description: Product ASIN
+          example: "B00BKQT2OI"
+        category:
+          type: string
+          description: Product category
+          example: "Books"
+      required:
+        - asin
+        - category
+
+tags:
+  - name: Products
+    description: Product catalog operations

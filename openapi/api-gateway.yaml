@@ -1,0 +1,369 @@
+openapi: 3.0.3
+info:
+  title: API Gateway
+  description: |
+    API Gateway for the Yugastore e-commerce platform.
+    This service acts as the central entry point for all API requests, routing them to the appropriate microservices.
+
+    The API Gateway aggregates functionality from:
+    - Products Microservice (product catalog)
+    - Cart Microservice (shopping cart)
+    - Checkout Microservice (order processing)
+
+    It uses Netflix Eureka for service discovery and Feign clients for inter-service communication.
+  version: 1.0.0
+  contact:
+    name: Yugastore Team
+servers:
+  - url: http://localhost:8081
+    description: Local development server
+
+paths:
+  /api/v1/product/{asin}:
+    get:
+      summary: Get product details
+      description: Retrieves detailed metadata for a specific product. Proxies to Products Microservice.
+      operationId: getProductDetails
+      tags:
+        - Product Catalog
+      parameters:
+        - name: asin
+          in: path
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Successfully retrieved product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductMetadata'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error or downstream service unavailable
+
+  /api/v1/products:
+    get:
+      summary: Get all products
+      description: Retrieves a paginated list of all products. Proxies to Products Microservice.
+      operationId: getProducts
+      tags:
+        - Product Catalog
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          description: Maximum number of products to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          example: 12
+        - name: offset
+          in: query
+          required: true
+          description: Number of products to skip for pagination
+          schema:
+            type: integer
+            minimum: 0
+          example: 0
+      responses:
+        '200':
+          description: Successfully retrieved product list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductMetadata'
+        '500':
+          description: Internal server error
+
+  /api/v1/products/category/{category}:
+    get:
+      summary: Get products by category
+      description: Retrieves products within a specific category. Proxies to Products Microservice.
+      operationId: getProductsByCategory
+      tags:
+        - Product Catalog
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: Product category name
+          schema:
+            type: string
+          example: "Books"
+        - name: limit
+          in: query
+          required: true
+          description: Maximum number of products to return
+          schema:
+            type: integer
+          example: 12
+        - name: offset
+          in: query
+          required: true
+          description: Number of products to skip for pagination
+          schema:
+            type: integer
+          example: 0
+      responses:
+        '200':
+          description: Successfully retrieved category products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductRanking'
+        '500':
+          description: Internal server error
+
+  /api/v1/shoppingCart:
+    post:
+      summary: Get shopping cart contents
+      description: Retrieves all products in the current user's shopping cart. Proxies to Cart Microservice.
+      operationId: getShoppingCart
+      tags:
+        - Shopping Cart
+      responses:
+        '200':
+          description: Successfully retrieved cart contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartContents'
+        '500':
+          description: Internal server error
+
+  /api/v1/shoppingCart/addProduct:
+    post:
+      summary: Add product to cart
+      description: Adds a product to the current user's shopping cart. Proxies to Cart Microservice.
+      operationId: addProductToCart
+      tags:
+        - Shopping Cart
+      parameters:
+        - name: asin
+          in: query
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Product added, returns updated cart contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartContents'
+        '500':
+          description: Internal server error
+
+  /api/v1/shoppingCart/removeProduct:
+    post:
+      summary: Remove product from cart
+      description: Removes a product from the current user's shopping cart. Proxies to Cart Microservice.
+      operationId: removeProductFromCart
+      tags:
+        - Shopping Cart
+      parameters:
+        - name: asin
+          in: query
+          required: true
+          description: The Amazon Standard Identification Number (product ID)
+          schema:
+            type: string
+          example: "B00BKQT2OI"
+      responses:
+        '200':
+          description: Product removed, returns updated cart contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartContents'
+        '500':
+          description: Internal server error
+
+  /api/v1/shoppingCart/checkout:
+    post:
+      summary: Process checkout
+      description: |
+        Processes checkout for the current user's shopping cart.
+        Validates inventory, creates order, and clears cart.
+        Proxies to Checkout Microservice.
+      operationId: checkout
+      tags:
+        - Checkout
+      responses:
+        '200':
+          description: Checkout processed (check status for success/failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutStatus'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    ProductMetadata:
+      type: object
+      description: Complete product metadata
+      properties:
+        id:
+          type: string
+          description: Product ASIN
+          example: "B00BKQT2OI"
+        brand:
+          type: string
+          description: Product brand name
+        categories:
+          type: array
+          items:
+            type: string
+          description: Product categories
+        imUrl:
+          type: string
+          description: Product image URL
+        price:
+          type: number
+          format: double
+          description: Product price in USD
+        title:
+          type: string
+          description: Product title
+        description:
+          type: string
+          description: Product description
+        also_bought:
+          type: array
+          items:
+            type: string
+          description: Related product ASINs
+        also_viewed:
+          type: array
+          items:
+            type: string
+        bought_together:
+          type: array
+          items:
+            type: string
+        buy_after_viewing:
+          type: array
+          items:
+            type: string
+        num_reviews:
+          type: integer
+          description: Number of reviews
+        num_stars:
+          type: number
+          format: double
+          description: Total stars
+        avg_stars:
+          type: number
+          format: double
+          description: Average rating (0-5)
+
+    ProductRanking:
+      type: object
+      description: Product with category ranking
+      properties:
+        id:
+          type: object
+          properties:
+            asin:
+              type: string
+            category:
+              type: string
+        salesRank:
+          type: integer
+        title:
+          type: string
+        price:
+          type: number
+          format: double
+        imUrl:
+          type: string
+        num_reviews:
+          type: integer
+        num_stars:
+          type: number
+          format: double
+        avg_stars:
+          type: number
+          format: double
+
+    CartContents:
+      type: object
+      description: Map of product ASINs to quantities
+      additionalProperties:
+        type: integer
+      example:
+        "B00BKQT2OI": 2
+        "B00BKQT3XT": 1
+
+    CheckoutStatus:
+      type: object
+      description: Checkout operation result
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, FAILURE]
+          description: Checkout status
+        orderNumber:
+          type: string
+          description: Order UUID (empty on failure)
+        orderDetails:
+          type: string
+          description: Order summary or error message
+
+    Order:
+      type: object
+      description: Order record
+      properties:
+        id:
+          type: string
+          description: Order UUID
+        user_id:
+          type: integer
+        order_details:
+          type: string
+        order_time:
+          type: string
+        order_total:
+          type: number
+          format: double
+
+    ProductInventory:
+      type: object
+      description: Product inventory
+      properties:
+        id:
+          type: string
+          description: Product ASIN
+        quantity:
+          type: integer
+          description: Available stock
+
+    ImageInfo:
+      type: object
+      description: Product image metadata
+      properties:
+        url:
+          type: string
+          description: Image URL
+
+tags:
+  - name: Product Catalog
+    description: Product browsing and search operations
+  - name: Shopping Cart
+    description: Shopping cart management
+  - name: Checkout
+    description: Order processing

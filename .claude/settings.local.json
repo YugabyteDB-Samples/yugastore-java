@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh label list:*)",
+      "Bash(gh label create:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh issue view:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh issue edit:*)",
+      "Bash(gh issue list:*)",
+      "Bash(mkdir:*)",
+      "Bash(curl:*)",
+      "Bash(npm run build:*)",
+      "Bash(git stash:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(pkill:*)",
+      "Bash(git reset:*)"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+REVERSE-ENGINEERED REQUIREMENTS
+From Legacy System Analysis
+===============================
+
+SYSTEM ARCHITECTURE:
+
+REQ-100: The application must use a microservices architecture
+REQ-101: Services shall communicate via REST APIs
+REQ-102: The system must use a distributed database for scalability
+
+DATA MANAGEMENT:
+
+REQ-110: All product data must be cached for performance
+REQ-111: The system shall implement database connection pooling
+REQ-112: Data backups must be performed daily
+- The system needs to support data export in JSON format
+- Product inventory must be updated in real-time
+
+API REQUIREMENTS:
+
+REQ-120: API endpoints must follow RESTful conventions
+REQ-121: All API responses shall include proper HTTP status codes
+REQ-122: The API must support rate limiting to prevent abuse
+- API documentation needs to be auto-generated from code
+- Versioning should be implemented in API URLs
+
+ERROR HANDLING:
+
+REQ-130: The system must gracefully handle all error conditions
+REQ-131: Error messages shall not expose sensitive system information
+REQ-132: Failed transactions must be rolled back completely
+- Critical errors need to trigger immediate notifications
+- User-facing errors should provide helpful recovery instructions
+
+MONITORING AND LOGGING:
+
+REQ-140: The system must log all user authentication attempts
+REQ-141: Performance metrics shall be collected for all API endpoints
+REQ-142: The system needs to support distributed tracing
+- Log retention must be at least 90 days
+- Monitoring dashboards should display real-time system health
+
+INTEGRATION:
+
+REQ-150: The system must integrate with external payment gateway
+REQ-151: Email service integration shall support transactional emails
+REQ-152: The system needs to integrate with inventory management system
+
+
