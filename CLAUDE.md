@@ -183,3 +183,7 @@ Images built with consistent naming: `yugastore-{service}:v0.1`
 - yugastore-cart:v0.1
 - yugastore-checkout:v0.1
 - yugastore-react:v0.1
+
+## Task Master AI Instructions
+**Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
+@./.taskmaster/CLAUDE.md
