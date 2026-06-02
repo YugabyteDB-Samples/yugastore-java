@@ -1,0 +1,136 @@
+name: CI
+
+# Build Verification Test (BVT) gate + unit tests for the Yugastore monorepo.
+#
+# Jobs:
+#   build           - compiles & packages all Maven modules + builds the React UI (the BVT gate).
+#   backend-tests   - runs the JUnit/Spring tests against an ephemeral YugabyteDB.
+#   frontend-tests  - runs the React (Jest) unit tests.
+#
+# Notes:
+#   * Every module binds exec-maven-plugin -> `docker build` in the package phase;
+#     we skip that in CI with -Dexec.skip=true (images are built/pushed by the CD pipeline).
+#   * The Eureka client is disabled during tests so context-load tests don't block on discovery.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  MAVEN_ARGS: "-B -ntp -Dexec.skip=true"
+
+jobs:
+  # ── BVT: everything must compile, the React UI must build, all jars must package ──
+  build:
+    name: Build (BVT)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build & package all modules (tests skipped)
+        run: ./mvnw ${MAVEN_ARGS} -DskipTests verify
+
+      - name: Upload packaged jars
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jars
+          path: "**/target/*.jar"
+          retention-days: 5
+          if-no-files-found: ignore
+
+  # ── Microservice unit/smoke tests against a throwaway YugabyteDB ──
+  backend-tests:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    env:
+      # Disable Eureka discovery so @SpringBootTest context-load tests don't hang/fail in CI.
+      EUREKA_CLIENT_ENABLED: "false"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+      SPRING_CLOUD_DISCOVERY_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Start YugabyteDB
+        run: |
+          docker run -d --name yb \
+            -p 5433:5433 -p 9042:9042 -p 7000:7000 \
+            -v "${{ github.workspace }}/resources:/resources" \
+            yugabytedb/yugabyte:2.20.2.0-b145 \
+            bin/yugabyted start --daemon=false --ui=false
+
+      - name: Wait for YugabyteDB (YCQL + YSQL)
+        run: |
+          echo "Waiting for YCQL (9042) and YSQL (5433)..."
+          for i in $(seq 1 60); do
+            if docker exec yb ycqlsh -e "DESCRIBE KEYSPACES;" >/dev/null 2>&1 \
+               && docker exec yb ysqlsh -h localhost -U postgres -d postgres -c '\l' >/dev/null 2>&1; then
+              echo "YugabyteDB is ready."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "YugabyteDB did not become ready in time" >&2
+          docker logs yb || true
+          exit 1
+
+      - name: Load YCQL schema (keyspace cronos)
+        run: docker exec yb ycqlsh -f /resources/schema.cql
+
+      - name: Run backend tests
+        run: ./mvnw ${MAVEN_ARGS} -DfailIfNoTests=false test
+
+      - name: Dump YugabyteDB logs on failure
+        if: failure()
+        run: docker logs yb || true
+
+  # ── React UI unit tests ──
+  frontend-tests:
+    name: Frontend tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: react-ui/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 16
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+          cache: npm
+          cache-dependency-path: react-ui/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Jest unit tests
+        env:
+          CI: "true"
+        run: npm test -- --watchAll=false --passWithNoTests

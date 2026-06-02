@@ -1,0 +1,45 @@
+version: 2
+
+updates:
+  # ── Maven: root aggregator + each module (multi-module reactor) ──
+  - package-ecosystem: maven
+    directories:
+      - "/"
+      - "/eureka-server-local"
+      - "/products-microservice"
+      - "/checkout-microservice"
+      - "/cart-microservice"
+      - "/api-gateway-microservice"
+      - "/login-microservice"
+      - "/react-ui"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      spring:
+        patterns:
+          - "org.springframework*"
+          - "org.springframework.boot*"
+          - "org.springframework.cloud*"
+    labels:
+      - dependencies
+      - java
+
+  # ── npm: React UI frontend ──
+  - package-ecosystem: npm
+    directory: "/react-ui/frontend"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+      - javascript
+
+  # ── GitHub Actions used by our workflows ──
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - github-actions

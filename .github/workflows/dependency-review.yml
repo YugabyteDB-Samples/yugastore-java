@@ -1,0 +1,23 @@
+name: Dependency Review
+
+# Blocks pull requests that introduce dependencies with known vulnerabilities.
+# Complements CodeQL (code) and Dependabot (ongoing updates) by gating new deps at PR time.
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Review dependencies
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure

@@ -1,0 +1,53 @@
+name: CodeQL
+
+# Static security analysis for the Yugastore monorepo.
+#
+# Findings appear under the repo's Security > Code scanning tab. Because this is a
+# public repository, GitHub Copilot Autofix is automatically offered on the alerts
+# CodeQL raises (it suggests a fix you can commit straight from the PR/alert).
+#
+# We use build-mode "none" so no Maven/npm build is required to analyze the code,
+# which keeps scans fast and avoids needing the database/services at scan time.
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    # Weekly full scan (Mondays 06:17 UTC) to catch newly published CodeQL queries.
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write   # required to upload results to code scanning
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: java-kotlin
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: security-extended
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
