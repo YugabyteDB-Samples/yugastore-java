@@ -4,6 +4,7 @@ Spring Boot microservices eCommerce app backed by YugabyteDB. Seven Maven module
 
 @docs/architecture.md
 @docs/gotchas.md
+@docs/testing-strategy.md
 
 ## AI-SDLC conventions
 
