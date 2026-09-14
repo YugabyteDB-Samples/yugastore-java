@@ -1,0 +1,24 @@
+name: Scheduled drift review
+
+on:
+  schedule:
+    - cron: "0 15 1 * *" # 1st of every month, 15:00 UTC — adjust cadence as the team sees fit
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+
+jobs:
+  open-drift-review-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Open drift-review issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Drift review: docs/architecture.md vs. reality ($(date +%Y-%m-%d))" \
+            --label "ai:spec-ready" \
+            --body "Recurring drift-review per docs/ai-sdlc-roadmap.md §3. An agent should diff docs/architecture.md (service map, call graph, build/startup) against the actual repo state and open a PR for anything that has drifted silently."
