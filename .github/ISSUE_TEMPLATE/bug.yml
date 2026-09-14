@@ -1,0 +1,23 @@
+name: Bug Report
+description: Something is broken.
+title: "[bug] "
+labels: ["ai:spec-ready", "bug"]
+body:
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs. actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Environment / relevant logs
+    validations:
+      required: false

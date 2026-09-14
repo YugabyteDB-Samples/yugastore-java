@@ -1,0 +1,34 @@
+name: Feature / Work Item
+description: A unit of work to be picked up by a human or an agent.
+title: "[short summary]"
+labels: ["ai:spec-ready"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is the source of truth for **problem statement and acceptance criteria** (see `docs/ai-sdlc-roadmap.md` §5). Once work starts, the branch and `specs/` folder will be named `<this-issue-number>-<slug>` — see `CLAUDE.md`.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What's wrong or missing, and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Testable statements of "done." A fuller `spec.md` may supersede this once brainstorming runs (roadmap §6) — if so, this section should link to it rather than restate it.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Expected scope (superpowers brainstorming)
+      options:
+        - Spike
+        - Bounded
+        - Architectural
+        - Not sure yet
+    validations:
+      required: false

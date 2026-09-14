@@ -1,0 +1,21 @@
+name: Definition of done check
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  dod-checkbox:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify DoD checkbox is checked
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if echo "$BODY" | grep -qiE -- '- \[x\] constitution/docs/ADR impact considered'; then
+            echo "DoD checkbox checked."
+          else
+            echo "::error::PR description must check 'constitution/docs/ADR impact considered' (see .github/PULL_REQUEST_TEMPLATE.md and docs/ai-sdlc-roadmap.md §8)."
+            exit 1
+          fi
