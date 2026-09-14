@@ -1,0 +1,38 @@
+name: Naming convention check
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify branch matches <issue-#>-<slug>
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          if [[ "$BRANCH" == "master" || "$BRANCH" == dependabot/* ]]; then
+            echo "Exempt branch: $BRANCH"
+            exit 0
+          fi
+          if [[ ! "$BRANCH" =~ ^[0-9]+-[a-z0-9-]+$ ]]; then
+            echo "::error::Branch '$BRANCH' does not match the required '<issue-#>-<slug>' convention (see docs/ai-sdlc-roadmap.md §1.5)."
+            exit 1
+          fi
+          echo "Branch name OK: $BRANCH"
+
+      - name: Verify specs/<issue-#>-<slug>/ exists
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          if [[ "$BRANCH" == "master" || "$BRANCH" == dependabot/* ]]; then
+            exit 0
+          fi
+          if [[ ! -d "specs/$BRANCH" ]]; then
+            echo "::error::Expected specs/$BRANCH/ to exist (spec.md + plan.md) — see docs/ai-sdlc-roadmap.md §6."
+            exit 1
+          fi
+          echo "specs/$BRANCH/ present."

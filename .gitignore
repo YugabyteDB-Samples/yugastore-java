@@ -30,3 +30,6 @@ package-lock.json
 .env
 .vscode/
 *.dylib
+
+# AI-SDLC local session hot cache (see docs/ai-sdlc-roadmap.md §2) — never committed
+.ai-local/
